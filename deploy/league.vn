@@ -1,0 +1,23 @@
+server {
+    listen 80;
+    server_name league.vn;
+
+    client_max_body_size 500M;
+
+    access_log /var/log/nginx/league_vn_access.log;
+    error_log /var/log/nginx/league_vn_error.log;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        alias /var/www/html/league/static/;
+    }
+
+     location /media/ {
+            alias /var/www/html/league/media/;
+     }
+
+    location / {
+        include         uwsgi_params;
+        uwsgi_pass      unix:/run/uwsgi/league.sock;
+    }
+}
