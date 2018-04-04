@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+from taggit.managers import TaggableManager
 
 
 class GeneralCharField(models.CharField):
@@ -35,7 +36,7 @@ def site_slug(data):
     slug = slugify(data.translate(vietnamese_map))
     return slug
 
-class GeneralSlug(models.CharField):
+class GeneralSlug(GeneralCharField):
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 191
         kwargs['blank'] = True
@@ -99,3 +100,136 @@ class TimeStampedModel(models.Model):
             return mark_safe('<img src="%s" width="150" />' % self.image.url)
         return None
     image_tag.short_description = _('Image')
+
+class Player(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+    slug = GeneralSlug()
+    dob = GeneralCharField(null=True, default=None)
+    nationality = GeneralCharField(null=True, default=None)
+    height = models.PositiveSmallIntegerField(null=True, default=None)
+    weight = models.PositiveSmallIntegerField(null=True, default=None)
+    image = models.ImageField(null=True, default=None)
+    class Meta:
+        verbose_name = _('Player')
+        verbose_name_plural = _('Players')
+
+class Coach(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+    dob = models.DateField(null=True, default=None)
+    nationality = GeneralCharField(null=True, default=None)
+    height = models.PositiveSmallIntegerField(null=True, default=None)
+    weight = models.PositiveSmallIntegerField(null=True, default=None)
+    image = models.ImageField(null=True, default=None)
+    class Meta:
+        verbose_name = _('Coach')
+        verbose_name_plural = _('Coaches')
+
+class Referee(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+    dob = models.DateField(null=True, default=None)
+    nationality = GeneralCharField(null=True, default=None)
+    height = models.PositiveSmallIntegerField(null=True, default=None)
+    weight = models.PositiveSmallIntegerField(null=True, default=None)
+    image = models.ImageField(null=True, default=None)
+    class Meta:
+        verbose_name = _('Referee')
+        verbose_name_plural = _('Referees')
+
+class Club(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+    slug = GeneralSlug()
+    image = models.ImageField(null=True, default=None)
+    players = models.ManyToManyField(Player, through='Membership')
+    class Meta:
+        verbose_name = _('Club')
+        verbose_name_plural = _('Clubs')
+
+
+# many-to-many with extra fields
+class Membership(TimeStampedModel):
+    TYPE_CHOICES = (
+        ('goal_keeper', _("Goal Keeper")),
+        ('forward', _("Forward")),
+        ('defender', _("Defender")),
+        ('winger', _("Winger")),
+        ('middle_defender', _("Middle Defender")),
+        ('middle_attacker', _("Middle Attacker")),
+    )
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    date_joined = GeneralCharField()
+    date_quited = GeneralCharField(null=True, default=None)
+    type = GeneralCharField(choices=TYPE_CHOICES)
+
+class Stadium(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+    capable = models.PositiveIntegerField(null=True, default=None)
+    image = models.ImageField(null=True, default=None)
+    class Meta:
+        verbose_name = _('Stadium')
+        verbose_name_plural = _('Stadiums')
+
+class League(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+    slug = GeneralSlug()
+
+    class Meta:
+        verbose_name = _('League')
+        verbose_name_plural = _('Leagues')
+
+class Season(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+
+    class Meta:
+        verbose_name = _('Season')
+        verbose_name_plural = _('Seasons')
+
+class Match(TimeStampedModel):
+    club1 = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='club_1')
+    club2 = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='club_2')
+    referee = models.ForeignKey(Referee, on_delete=models.CASCADE)
+    start_time = GeneralCharField(null=True, default=None)
+    end_time = GeneralCharField(null=True, default=None)
+    stadium = models.ForeignKey(Stadium, on_delete=models.CASCADE)
+    league = models.ForeignKey(League, on_delete=models.CASCADE)
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    club1_end_score = models.PositiveSmallIntegerField(default=0)
+    club2_end_score = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        verbose_name = _('Match')
+        verbose_name_plural = _('Matches')
+
+class MatchDetail(TimeStampedModel):
+    ACTION_CHOICES = (
+        ('in', _("In/Start")),
+        ('out', _("Out")),
+        ('score', _("Score")),
+        ('free_kick_corner', _("Free kick corner penalty")),
+        ('free_kick_penalty', _("Free kick penalty")),
+        ('yellow_card', _("Yellow Card")),
+        ('red_card', _("Red Card")),
+    )
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    action = GeneralCharField(choices=ACTION_CHOICES)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    time = GeneralCharField(null=True, default=None)
+
+
+
+class Post(TimeStampedModel):
+
+    name = GeneralCharField(null=True, default=None)
+    desc = models.TextField(blank=True, null=True)
+    slug = GeneralSlug()
+    status = models.BooleanField(default=True)
+    image = models.ImageField(blank=True, null=True)
+    content = models.TextField(blank=True, null=True)
+    tags = TaggableManager()
+    views = models.IntegerField(default=0, editable=False)
+
+    class Meta:
+        verbose_name = _('Post')
+        verbose_name_plural = _('Posts')
+
+
