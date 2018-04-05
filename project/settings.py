@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'dal_select2',
     'filebrowser',
     'django.contrib.admindocs',
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,6 +58,7 @@ INSTALLED_APPS = [
     'constance.backends.database',
     'ckeditor',
     'ckeditor_uploader',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
