@@ -35,3 +35,46 @@ class PostAdmin(ExportMixin, GeneralWithTagAdmin):
     ]
 
 admin.site.register(Post, PostAdmin)
+
+class PlayerAdmin(admin.ModelAdmin):
+    search_fields = ['name', ]
+    list_filter = (
+        'status',
+    )
+    list_display = ('name', 'current_club', 'dob', 'nationality', 'height', 'weight', 'position', 'created_at', 'status')
+    form = PlayerForm
+
+class CoachAdmin(admin.ModelAdmin):
+    search_fields = ['name', ]
+    list_filter = (
+        'status',
+    )
+    list_display = ('name', 'club', 'dob', 'nationality', 'height', 'weight', 'created_at', 'status')
+    form = CoachForm
+
+class RefereeAdmin(admin.ModelAdmin):
+    search_fields = ['name', ]
+    list_filter = (
+        'status',
+    )
+    list_display = ('name', 'dob', 'nationality', 'height', 'weight', 'created_at', 'status')
+    form = RefereeForm
+
+
+
+class GeneralAdmin(admin.ModelAdmin):
+    pass
+
+class MembershipAdmin(admin.ModelAdmin):
+    list_display = ('player', 'club', 'date_joined', 'date_quited')
+    form = MembershipForm
+
+admin.site.register(Player, PlayerAdmin)
+admin.site.register(Membership, MembershipAdmin)
+admin.site.register(Club, GeneralAdmin)
+admin.site.register(Stadium, GeneralAdmin)
+admin.site.register(Referee, RefereeAdmin)
+admin.site.register(Match, GeneralAdmin)
+admin.site.register(Coach, CoachAdmin)
+admin.site.register(League, GeneralAdmin)
+admin.site.register(Season, GeneralAdmin)

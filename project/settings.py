@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'django_extensions',
+    'django_countries',
 ]
 
 MIDDLEWARE = [
@@ -287,7 +288,7 @@ CKEDITOR_CONFIGS = {
 }
 
 LABELS =  {
-    'name': 'Tiêu đề',
+    'name': 'Tên',
 }
 
 TAGGIT_CASE_INSENSITIVE = True
