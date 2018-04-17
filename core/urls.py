@@ -2,6 +2,8 @@ from dal import autocomplete
 from django.conf.urls import url
 from taggit.models import Tag
 
+from core.views import *
+
 app_name = "core"
 
 class TagAutoComplete(autocomplete.Select2QuerySetView):
@@ -13,7 +15,7 @@ class TagAutoComplete(autocomplete.Select2QuerySetView):
         return qs
 
 
-
 urlpatterns = [
     url(r'^tag-autocomplete/$', TagAutoComplete.as_view(), name='tag_autocomplete'),
+    url(r'^players$', player_by_club_json, name='player_by_club'),
 ]

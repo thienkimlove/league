@@ -2,6 +2,7 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from dal import autocomplete
 
 from django import forms
+from django.db.models import Q
 from django.forms import SelectDateWidget
 
 from core.models import *
@@ -46,12 +47,30 @@ class RefereeForm(forms.ModelForm):
         }
         labels = settings.LABELS
 
-class MembershipForm(forms.ModelForm):
+class MatchForm(forms.ModelForm):
     class Meta:
-        model = Membership
+        model = Match
         fields = '__all__'
         widgets = {
-            'date_joined': SelectDateWidget(years=[x for x in range(2010, 2030)]),
-            'date_quited': SelectDateWidget(empty_label=("Choose Year", "Choose Month", "Choose Day"), years=[x for x in range(2010, 2030)]),
+
         }
         labels = settings.LABELS
+
+    class Media:
+        pass
+        #js = ('core/js/ajax.js',)
+
+class MatchDetailForm(forms.ModelForm):
+
+    class Meta:
+        model = MatchDetail
+        fields = '__all__'
+        labels = settings.LABELS
+
+    def __init__(self, *args, **kwargs):
+        super(MatchDetailForm, self).__init__(*args, **kwargs)
+        if self.instance.match_id:
+            q = Q(status=True) | Q(club_id__isin=(self.instance.match.home_team_id, self.instance.match.away_team_id))
+            self.fields['player'].queryset = Player.objects.filter(q)
+        else:
+            self.fields['player'].queryset = Player.objects.filter(status=True)

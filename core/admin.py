@@ -41,7 +41,7 @@ class PlayerAdmin(admin.ModelAdmin):
     list_filter = (
         'status',
     )
-    list_display = ('name', 'current_club', 'dob', 'nationality', 'height', 'weight', 'position', 'created_at', 'status')
+    list_display = ('name', 'club', 'dob', 'nationality', 'height', 'weight', 'position', 'created_at', 'status')
     form = PlayerForm
 
 class CoachAdmin(admin.ModelAdmin):
@@ -62,19 +62,26 @@ class RefereeAdmin(admin.ModelAdmin):
 
 
 
+
 class GeneralAdmin(admin.ModelAdmin):
     pass
 
-class MembershipAdmin(admin.ModelAdmin):
-    list_display = ('player', 'club', 'date_joined', 'date_quited')
-    form = MembershipForm
+class MatchDetailInline(admin.TabularInline):
+    model = MatchDetail
+
+class MatchAdmin(admin.ModelAdmin):
+    #autocomplete_fields = ['start_player_home_team', 'start_player_away_team']
+    inlines = [
+        MatchDetailInline,
+    ]
+    form = MatchForm
 
 admin.site.register(Player, PlayerAdmin)
-admin.site.register(Membership, MembershipAdmin)
 admin.site.register(Club, GeneralAdmin)
 admin.site.register(Stadium, GeneralAdmin)
 admin.site.register(Referee, RefereeAdmin)
-admin.site.register(Match, GeneralAdmin)
+admin.site.register(Match, MatchAdmin)
 admin.site.register(Coach, CoachAdmin)
 admin.site.register(League, GeneralAdmin)
 admin.site.register(Season, GeneralAdmin)
+admin.site.register(Position, GeneralAdmin)

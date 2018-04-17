@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'django_extensions',
     'django_countries',
+    'smart_selects',
 ]
 
 MIDDLEWARE = [
@@ -292,3 +293,5 @@ LABELS =  {
 }
 
 TAGGIT_CASE_INSENSITIVE = True
+
+USE_DJANGO_JQUERY = True
