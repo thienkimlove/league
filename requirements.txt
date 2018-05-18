@@ -4,7 +4,7 @@ diff-match-patch==20121119
 Django==2.0.3
 django-admin-interface==0.6.3
 django-appconf==1.0.1
-django-autocomplete-light==3.2.10
+-e git+https://github.com/yourlabs/django-autocomplete-light.git@037a83a3c21c425fa271775f56b7d22abd30d373#egg=django_autocomplete_light
 django-ckeditor==5.4.0
 django-classy-tags==0.6.2
 django-colorfield==0.1.14
@@ -26,6 +26,7 @@ django-select2==6.0.2
 django-siteprefs==0.7.0
 django-smart-selects==1.5.4
 django-taggit==0.22.2
+django-taggit-autosuggest==0.3.3
 docutils==0.14
 et-xmlfile==1.0.1
 fake-factory==9999.9.9

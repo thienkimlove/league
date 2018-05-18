@@ -75,6 +75,10 @@ class MatchAdmin(admin.ModelAdmin):
         MatchDetailInline,
     ]
     form = MatchForm
+    class Media:
+        js = (
+            'core/js/bind_fields.js',   # app static folder
+        )
 
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Club, GeneralAdmin)

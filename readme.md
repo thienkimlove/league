@@ -20,3 +20,18 @@ mysql -uroot -ptieungao -e "CREATE DATABASE league CHARACTER SET utf8mb4 COLLATE
 python manage.py migrate
 ```
 
+#### Problem with Django Smart Select
+
+* Fix error on Js with `pip install git+https://github.com/digi604/django-smart-selects.git@js-unlinting-fixes --upgrade`
+
+* We create `core/static/core/js/bind_fields.js` for reload the list of player in  Select Start Players and Inline Form
+
+
+#### Problem with AutocompleteLight and Django Taggit
+
+No button for create new tags.
+
+We must install latest version of autocomplete light
+
+`pip install -e git+https://github.com/yourlabs/django-autocomplete-light.git#egg=django-autocomplete-light --upgrade`
+

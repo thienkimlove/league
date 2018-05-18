@@ -1,0 +1,60 @@
+{% load static i18n %}
+<!-- start header -->
+<header>
+    <div class="header-default">
+        <div class="container">
+            <div class="row no-margin">
+                <div class="col-md-3 col-sm-3 col-xs-12 no-padding">
+                    <div class="logo">
+                        <img src="{% static "frontend/images/logo.jpg" %}" alt="Lao Premier League" />
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-9 col-xs-12 no-padding">
+                    <div class="row topbar no-margin">
+                        <div class="col-md-8 col-sm-7 col-xs-12">
+                            <div class="block club-team">
+                                <div class="block-title"> Clubs: </div>
+                                <div class="block-content">
+                                    <!-- Start clubs images carousel -->
+                                    <div class="owl-carousel owl-theme" id="clubs-carousel">
+                                        <div class="item">
+                                            <a href="#">
+                                                <img src="{% static "frontend/images/club01.png" %}" alt="club01" />
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-5 col-xs-12">
+                            <div class="block block-search">
+                                <form class="form-inline mt-2 mt-md-0">
+                                    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                                    <button type="submit"> <i class="fa fa-search"> </i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row megamenu no-margin">
+                        <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
+                            <ul class="nav nav-pills nav-links">
+                                <li><a href="#" class="active">Home</a></li>
+                                <li><a href="#">Fixtures</a></li>
+                                <li><a href="#">Result </a></li>
+                                <li><a href="#">Table</a></li>
+                                <li><a href="#">Clubs </a></li>
+                                <li><a href="#">Players</a></li>
+                                <li><a href="#">Managers </a></li>
+                                <li><a href="#">News</a></li>
+                                <li><a href="#">Media Gallery</a></li>
+                                <li><a href="#">Communities</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- End of header -->
