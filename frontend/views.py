@@ -7,11 +7,11 @@ from core.models import *
 
 
 def index(request):
-    posts = Post.objects.filter(status=True).all()
+    block_1_posts = Post.objects.filter(status=True).filter(display_place='block_1').order_by('-created_at')[:4]
     index_banners = Banner.objects.filter(status=True).all()
-    latest_post = Post.objects.filter(status=True).latest(field_name='created_at')
-    related_posts = latest_post.tags.similar_objects()[0:3]
-    return render(request, 'frontend/index.html', {'posts' : posts, 'index_banners' : index_banners, 'latest_post' : latest_post, 'related_posts' : related_posts})
+    block_2_posts = Post.objects.filter(status=True).filter(display_place='block_2').order_by('-created_at')[:4]
+    
+    return render(request, 'frontend/index.html', {'block_1_posts' : block_1_posts, 'index_banners' : index_banners, 'block_2_posts' : block_2_posts})
 
 
 def news(request):

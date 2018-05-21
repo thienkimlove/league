@@ -25,7 +25,7 @@ class GeneralWithTagAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(ExportMixin, GeneralWithTagAdmin):
-    list_display = ('name', 'image_tag', 'views', 'tag_list', 'created_at', 'status')
+    list_display = ('name', 'image_tag', 'views', 'tag_list', 'display_place', 'created_at', 'status')
 
     form = PostForm
     resource_class = PostResource

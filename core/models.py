@@ -260,6 +260,12 @@ class MatchDetail(TimeStampedModel):
 
 class Post(TimeStampedModel):
 
+    DISPLAY_CHOICES = (
+        ('block_1', _("Vị trí trung tâm trang chủ")),
+        ('block_2', _("Block 2 trang chủ")),
+
+    )
+
     name = GeneralCharField(null=True, default=None)
     desc = models.TextField(blank=True, null=True)
     slug = GeneralSlug()
@@ -268,6 +274,7 @@ class Post(TimeStampedModel):
     content = models.TextField(blank=True, null=True)
     tags = TaggableManager()
     views = models.IntegerField(default=0, editable=False)
+    display_place = GeneralCharField(choices=DISPLAY_CHOICES, blank=True, null=True)
 
     class Meta:
         verbose_name = _('Post')

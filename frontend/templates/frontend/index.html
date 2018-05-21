@@ -1,5 +1,5 @@
 {% extends 'frontend/base.html' %}
-{% load staticfiles i18n thumbnail %}
+{% load staticfiles i18n thumbnail core_helper %}
 
 {% block content %}
     <!-- Start content homepage -->
@@ -50,7 +50,7 @@
                             <div class="block-content">
                                 <!-- Start news-carousel carousel -->
                                 <div class="owl-carousel owl-theme" id="news-carousel">
-                                    {% for post in posts %}
+                                    {% for post in block_1_posts %}
                                     <div class="item">
                                         <div class="news-item style-v1">
                                             <div class="images">
@@ -84,12 +84,17 @@
 
                         {% endfor %}
 
+
+
                         <!-- 3. start block latest news  -->
                         <div class="block block-latestnew">
+
                             <div class="block-title">
                                 <span> Latest news </span>
                                 <a href="{% url 'frontend:news' %}" class="read-more"> More News <i class="fa fa-arrow-right"> </i></a>
                             </div>
+
+                            {% with block_2_posts|first as first_block_2_post %}
                             <div class="block-content">
                                 <div class="news-item style-v2">
                                     <div class="images">
@@ -98,17 +103,17 @@
                                     </div>
                                     <div class="new-content">
 
-                                        <div class="news-name">{{ latest_post.name }}</div>
+                                        <div class="news-name">{{ first_block_2_post.name }}</div>
 
-                                        <div class="time"><i class="fa fa-clock-o"> </i>{{ latest_post.created_at }}</div>
+                                        <div class="time"><i class="fa fa-clock-o"> </i>{{ first_block_2_post.created_at }}</div>
 
                                         <div class="news-des">
-                                           {{ latest_post.desc }}
+                                           {{ first_block_2_post.desc }}
                                         </div>
 
                                         <div class="related-new">
                                             <ul>
-                                                {% for related_obj in related_posts %}
+                                                {% for related_obj in first_block_2_post.tags.similar_objects|slice:"0:3"  %}
                                                 <li>
                                                     <a href="{% url 'frontend:news_detail' related_obj.slug %}">{{ related_obj.name }}</a>
                                                 </li>
@@ -118,57 +123,34 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {% endwith %}
                         </div>
 
                         <!-- 4. start Block news 02  -->
                         <div class="block block-news">
                             <!-- Start news-carousel carousel -->
                             <div class="owl-carousel owl-theme" id="news02-carousel">
-                                <div class="item">
-                                    <div class="news-item style-v3">
-                                        <div class="images">
-                                            <img src="{% static "frontend/images/news-02.jpg" %}" alt="news-02"/>
-                                        </div>
-                                        <div class="new-content">
-                                            <div class="news-name">Mourinho and Giggs hail 'fantastic' McTominay</div>
-                                            <div class="news-des">
-                                                Manchester United manager and club legend impressed by performance of
-                                                young midfielder against Chelsea
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="item">
-                                    <div class="news-item style-v3">
-                                        <div class="images">
-                                            <img src="{% static "frontend/images/news-03.jpg" %}" alt="news-03"/>
-                                        </div>
-                                        <div class="new-content">
-                                            <div class="news-name"> Watford put Jack on the road to play for England
-                                            </div>
-                                            <div class="news-des">
-                                                Manchester United manager and club legend impressed by performance of
-                                                young midfielder against Chelsea
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="item">
-                                    <div class="news-item style-v3">
-                                        <div class="images">
-                                            <img src="{% static "frontend/images/news-04.jpg" %}" alt="news-04"/>
-                                        </div>
-                                        <div class="new-content">
-                                            <div class="news-name"> Three key points: Arsenal v Man City</div>
-                                            <div class="news-des">
-                                                Manchester United manager and club legend impressed by performance of
-                                                young midfielder against Chelsea
+                                {% for block_2_post in block_2_posts %}
+                                    {% if forloop.counter > 0 %}
+                                        <div class="item">
+                                            <div class="news-item style-v3">
+                                                <div class="images">
+                                                    {% thumbnail post.image "391x261" crop="center" as im %}
+                                                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ block_2_post.name }}">
+                                                    {% endthumbnail %}
+                                                </div>
+                                                <div class="new-content">
+                                                    <div class="news-name">{{ block_2_post.name }}</div>
+                                                    <div class="news-des">
+                                                       {{ block_2_post.desc }}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
 
 
