@@ -1,0 +1,65 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail %}
+
+{% block content %}
+    <!-- start of breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <h3> News </h3>
+            <ul>
+                <li> <i class="fa fa-home"> </i> </li>
+                <li> <i class="fa fa-arrow-right"> </i> News </li>
+            </ul>
+
+            <ul class="menu-news pull-right">
+                <li> <a href="#" class="active"> All </a> </li>
+                <li> <a href="#"> Award </a> </li>
+                <li> <a href="#"> Commnunities  </a> </li>
+                <li> <a href="#"> Fixtures  </a> </li>
+                <li> <a href="#"> Taliking Tactics  </a> </li>
+                <li> <a href="#"> Transfers </a> </li>
+                <li> <a href="#"> Fixtures </a> </li>
+                <li> <a href="#"> Yount </a> </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content homepage -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <!-- start left column -->
+                <div class="col-md-9 col-sm-12 col-xs-12">
+                    <div class="news-list">
+                        <!-- start item -->
+                        <div class="news-item style-v2">
+                            <div class="images">
+                                <img class="responsive" src="{% static "frontend/images/news-01.jpg" %}" alt="news-01">
+                            </div>
+                            <div class="new-content">
+                                <div class="news-name"> On this day - 26 Feb 2000: Wimbledon 2-2 Man Utd</div>
+                                <div class="news-des">
+                                    I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- start button -->
+                        <div class="text-center">
+                            <button class="btn load-more"> <span> Loading more content...</span></button>
+                        </div>
+
+                    </div>
+
+                    <!--  start block Banner  -->
+                    <div class="block block-banner">
+                        <img src="{% static "frontend/images/banner01.jpg" %}" alt="Banner 01" />
+                    </div>
+                </div>
+
+                 {% include 'frontend/partials/right_index.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -274,6 +274,23 @@ class Post(TimeStampedModel):
         verbose_name_plural = _('Posts')
 
 
+class Banner(TimeStampedModel):
+
+    POSITION_CHOICES = (
+        ('index_1', _("Vị trí thứ nhất trang chủ")),
+        ('index_2', _("Vị trí thứ 2 trang chủ")),
+
+    )
+
+    name = GeneralCharField()
+    link = GeneralCharField(blank=True, null=True)
+    position = GeneralCharField(choices=POSITION_CHOICES)
+    image = models.ImageField(null=True, default=None, blank=True)
+    status = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _('Banner')
+        verbose_name_plural = _('Banners')
 
 # Signals
 

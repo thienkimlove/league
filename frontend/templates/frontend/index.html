@@ -32,119 +32,7 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="item">
-                                <div class="matchweek-item">
-                                    <div class="matchweek-content">
-                                        <span class="time">Saturday 24 February </span>
-                                        <span class="match-detail">
-                           <span class="team">
-                               <img src="{% static "frontend/images/club01.png" %}" alt="club01"/>
-                               <span class="team-name"> ARS </span>
-                         </span>
-                         <span class="result-match"> 0 - 3 </span>
-                         <span class="team">
-                               <img src="{% static "frontend/images/club02.png" %}" alt="club01"/>
-                               <span class="team-name"> MCI </span>
-                         </span>
-                   </span>
-                                    </div>
-                                    <div class="matchweek-link">
-                                        <a href="#"> Start </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="matchweek-item">
-                                    <div class="matchweek-content">
-                                        <span class="time">Saturday 24 February </span>
-                                        <span class="match-detail">
-                 <span class="team">
-                     <img src="{% static "frontend/images/club01.png" %}" alt="club01"/>
-                     <span class="team-name"> ARS </span>
-               </span>
-               <span class="result-match"> 0 - 3 </span>
-               <span class="team">
-                     <img src="{% static "frontend/images/club02.png" %}" alt="club01"/>
-                     <span class="team-name"> MCI </span>
-               </span>
-         </span>
-                                    </div>
-                                    <div class="matchweek-link">
-                                        <a href="#"> Start </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="matchweek-item">
-                                    <div class="matchweek-content">
-                                        <span class="time">Saturday 24 February </span>
-                                        <span class="match-detail">
-                <span class="team">
-                    <img src="{% static "frontend/images/club01.png" %}" alt="club01"/>
-                    <span class="team-name"> ARS </span>
-              </span>
-              <span class="result-match"> 0 - 3 </span>
-              <span class="team">
-                    <img src="{% static "frontend/images/club02.png" %}" alt="club01"/>
-                    <span class="team-name"> MCI </span>
-              </span>
-        </span>
-                                    </div>
-                                    <div class="matchweek-link">
-                                        <a href="#"> Start </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="matchweek-item">
-                                    <div class="matchweek-content">
-                                        <span class="time">Saturday 24 February </span>
-                                        <span class="match-detail">
-                <span class="team">
-                    <img src="{% static "frontend/images/club01.png" %}" alt="club01"/>
-                    <span class="team-name"> ARS </span>
-              </span>
-              <span class="result-match"> 0 - 3 </span>
-              <span class="team">
-                    <img src="{% static "frontend/images/club02.png" %}" alt="club01"/>
-                    <span class="team-name"> MCI </span>
-              </span>
-        </span>
-                                    </div>
-                                    <div class="matchweek-link">
-                                        <a href="#"> Start </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="matchweek-item">
-                                    <div class="matchweek-content">
-                                        <span class="time">Saturday 24 February </span>
-                                        <span class="match-detail">
-                <span class="team">
-                    <img src="{% static "frontend/images/club01.png" %}" alt="club01"/>
-                    <span class="team-name"> ARS </span>
-              </span>
-              <span class="result-match"> 0 - 3 </span>
-              <span class="team">
-                    <img src="{% static "frontend/images/club02.png" %}" alt="club01"/>
-                    <span class="team-name"> MCI </span>
-              </span>
-        </span>
-                                    </div>
-                                    <div class="matchweek-link">
-                                        <a href="#"> Start </a>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -187,16 +75,20 @@
                             </div>
                         </div>
 
-                        <!-- 2. start block banner  -->
-                        <div class="block block-banner">
-                            <img src="{% static "frontend/images/banner01.jpg" %}" alt="Banner 01"/>
-                        </div>
+
+                        {% for index_banner in index_banners %}
+                            <!-- 2. start block banner  -->
+                            <div class="block block-banner">
+                                <a target="_blank" href="{{ index_banner.link }}"><img src="{{ index_banner.image.url }}" alt="" class=""></a>
+                            </div>
+
+                        {% endfor %}
 
                         <!-- 3. start block latest news  -->
                         <div class="block block-latestnew">
                             <div class="block-title">
                                 <span> Latest news </span>
-                                <a href="#" class="read-more"> More News <i class="fa fa-arrow-right"> </i></a>
+                                <a href="{% url 'frontend:news' %}" class="read-more"> More News <i class="fa fa-arrow-right"> </i></a>
                             </div>
                             <div class="block-content">
                                 <div class="news-item style-v2">
@@ -206,24 +98,21 @@
                                     </div>
                                     <div class="new-content">
 
-                                        <div class="news-name"> On this day - 26 Feb 2000: Wimbledon 2-2 Man Utd</div>
+                                        <div class="news-name">{{ latest_post.name }}</div>
 
-                                        <div class="time"><i class="fa fa-clock-o"> </i> 26 Feb 2018</div>
+                                        <div class="time"><i class="fa fa-clock-o"> </i>{{ latest_post.created_at }}</div>
 
                                         <div class="news-des">
-                                            I am text block. Click edit button to change this text. Lorem ipsum dolor
-                                            sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec
-                                            ullamcorper mattis, pulvinar dapibus leo.
+                                           {{ latest_post.desc }}
                                         </div>
 
                                         <div class="related-new">
                                             <ul>
-                                                <li><a href="#"> Salah overtakes Fowler to set left-footed PL record
-                                                </a></li>
-                                                <li><a href="#"> Kane moves level with Duquemin on Club top scorers
-                                                    list </a></li>
-                                                <li><a href="#"> Kane moves level with Duquemin on Club top scorers
-                                                    list </a></li>
+                                                {% for related_obj in related_posts %}
+                                                <li>
+                                                    <a href="{% url 'frontend:news_detail' related_obj.slug %}">{{ related_obj.name }}</a>
+                                                </li>
+                                                {% endfor %}
                                             </ul>
                                         </div>
                                     </div>
@@ -895,7 +784,7 @@
 
                     <!-- start right column -->
 
-                    {% include "frontend/partials/right_index.html" %} } %}
+                    {% include "frontend/partials/right_index.html" %}
 
                 </div>
             </div>

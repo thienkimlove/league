@@ -9,4 +9,7 @@ def debug(msg):
 
 urlpatterns = [
     url(r'^$', index, name='index'),
+    url(r'^news/(?P<slug>[\w-]+)\.html$', news_detail, name='news_detail'),
+    url(r'^news$', news, name='news'),
+
 ]
