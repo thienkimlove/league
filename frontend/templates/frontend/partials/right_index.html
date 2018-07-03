@@ -1,4 +1,4 @@
-{% load staticfiles i18n thumbnail %}
+{% load staticfiles i18n thumbnail core_helper %}
 <div class="col-md-3 col-sm-12 col-xs-12 sidebar">
     <!-- 1. start block table list right column  -->
     <div class="block block-table-list style-v2">
@@ -6,6 +6,7 @@
         <div class="block-content">
             <div class="block-assists">
                 <ul>
+
                     <li>
                         <div class="assist03">
                             <span class="pos"><strong>Pos</strong></span>
@@ -15,91 +16,29 @@
                             <span class="pts"><strong>Pts </strong></span>
                         </div>
                     </li>
-                    <li>
-                        <div class="assist03">
-                            <span class="pos">1</span>
-                            <span class="club"> <img src="{% static "frontend/images/club01.png" %}"
-                                                     alt="club01"/> MCI </span>
-                            <span class="mp"> 7</span>
-                            <span class="gp"> +12</span>
-                            <span class="pts"><strong>21 </strong></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist03">
-                            <span class="pos">2</span>
-                            <span class="club"> <img src="{% static "frontend/images/club01.png" %}"
-                                                     alt="club01"/> MCI </span>
-                            <span class="mp"> 7</span>
-                            <span class="gp"> +12</span>
-                            <span class="pts"><strong>21 </strong></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist03">
-                            <span class="pos">3</span>
-                            <span class="club"> <img src="{% static "frontend/images/club01.png" %}"
-                                                     alt="club01"/> MCI </span>
-                            <span class="mp"> 7</span>
-                            <span class="gp"> +12</span>
-                            <span class="pts"><strong>21 </strong></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist03">
-                            <span class="pos">4</span>
-                            <span class="club"> <img src="{% static "frontend/images/club01.png" %}"
-                                                     alt="club01"/> MCI </span>
-                            <span class="mp"> 7</span>
-                            <span class="gp"> +12</span>
-                            <span class="pts"><strong>21 </strong></span>
-                        </div>
-                    </li>
 
-                    <li>
-                        <div class="assist03">
-                            <span class="pos">5</span>
-                            <span class="club"> <img src="{% static "frontend/images/club01.png" %}"
-                                                     alt="club01"/> MCI </span>
-                            <span class="mp"> 7</span>
-                            <span class="gp"> +12</span>
-                            <span class="pts"><strong>21 </strong></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist03">
-                            <span class="pos">6</span>
-                            <span class="club"> <img src="{% static "frontend/images/club01.png" %}"
-                                                     alt="club01"/> MCI </span>
-                            <span class="mp"> 7</span>
-                            <span class="gp"> +12</span>
-                            <span class="pts"><strong>21 </strong></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist03">
-                            <span class="pos">7</span>
-                            <span class="club"> <img src="{% static "frontend/images/club01.png" %}"
-                                                     alt="club01"/> MCI </span>
-                            <span class="mp"> 7</span>
-                            <span class="gp"> +12</span>
-                            <span class="pts"><strong>21 </strong></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist03">
-                            <span class="pos">8</span>
-                            <span class="club"> <img src="{% static "frontend/images/club01.png" %}"
-                                                     alt="club01"/> MCI </span>
-                            <span class="mp"> 7</span>
-                            <span class="gp"> +12</span>
-                            <span class="pts"><strong>21 </strong></span>
-                        </div>
-                    </li>
+                    {% for right_league_item in league_table %}
+                        <li>
+                            <div class="assist03">
+                                <span class="pos">{{ forloop.counter }}</span>
+                                <span class="club">
 
+                                    {% thumbnail right_league_item.image "42x40" crop="center" as im %}
+                                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_league_item.name }}">
+                                    {% endthumbnail %}
+
+                                    {{ right_league_item.name }}
+                                </span>
+
+                                <span class="mp">{{ right_league_item.mp }}</span>
+                                <span class="gp">{{ right_league_item.gp }}</span>
+                                <span class="pts"><strong> +{{ right_league_item.num_pts|number_if_none }} </strong></span>
+                            </div>
+                        </li>
+                    {% endfor %}
 
                     <li class="custom-button">
-                        <a href="#" class="view-full"> View All Tables</a>
+                        <a href="{% url 'frontend:tables' %}" class="view-full"> View All Tables</a>
                     </li>
                 </ul>
             </div>
@@ -112,239 +51,133 @@
         <div class="block-content">
             <div class="block-assists">
                 <ul>
-                    <li class="first-line">
-                        <div class="assist01">
-                            <div class="content">
-                                <span class="number"> 1 </span>
-                                <span class="name"> Sergio Agüero</span>
-                                <span><img src="{% static "frontend/images/club01.png" %}"
-                                           alt="club01"/>  Manchester City </span>
-                                <span> Goals / Penalty Goals</span>
-                                <span class="number"> 24 / 2 </span>
+
+                    {% for right_top_score_item in top_score %}
+
+                    {% if forloop.first %}
+
+                        <li class="first-line">
+                            <div class="assist01">
+                                <div class="content">
+                                    <span class="number"> {{ forloop.counter }} </span>
+                                    <span class="name">{{ right_top_score_item.name }}</span>
+                                    <span>
+                                        {% thumbnail right_top_score_item.image "42x40" crop="center" as im %}
+                                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_top_score_item.name }}">
+                                        {% endthumbnail %}
+
+                                        {{ right_top_score_item.name }}
+                                    </span>
+                                    <span> Goals / Penalty Goals</span>
+                                    <span class="number"> {{ right_top_score_item.num_score }} / {{ right_top_score_item.num_score_penalty }} </span>
+                                </div>
+                                <div class="image">
+                                    {% thumbnail right_top_score_item.club.image "115x125" crop="center" as im %}
+                                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_top_score_item.club.name }}">
+                                    {% endthumbnail %}
+                                </div>
                             </div>
-                            <div class="image"><img
-                                    src="{% static "frontend/images/assist02.png" %}" alt="club01"/>
+                        </li>
+                     {% else %}
+
+                        <li>
+                            <div class="assist02">
+                                <span class="number-no"> {{ forloop.counter }} </span>
+                                <span class="image">
+                                      {% thumbnail right_top_score_item.image "42x40" crop="center" as im %}
+                                          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_top_score_item.name }}">
+                                      {% endthumbnail %}
+							     </span>
+                                <span class="name-club">
+							            		<span class="name">{{ right_top_score_item.name }}</span>
+							            		<span class="club">{{ right_top_score_item.club.name }}</span>
+							            	</span>
+                                <span class="number"> {{ right_top_score_item.num_score }}({{ right_top_score_item.num_score_penalty }}) </span>
                             </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist02">
-                            <span class="number-no"> 2 </span>
-                            <span class="image">
-							            		<img class="image-radius image-40"
-                                                     src="{% static "frontend/images/assist03.png" %}" alt="club01"/>
-							            	</span>
-                            <span class="name-club">
-							            		<span class="name">Keven De Bruyne </span>
-							            		<span class="club">Manchester City </span>
-							            	</span>
-                            <span class="number"> 20(1) </span>
-                        </div>
-                    </li>
+                        </li>
+                    {% endif %}
 
-                    <li>
-                        <div class="assist02">
-                            <span class="number-no"> 3 </span>
-                            <span class="image">
-							            		<img class="image-radius image-40"
-                                                     src="{% static "frontend/images/assist03.png" %}" alt="club01"/>
-							            	</span>
-                            <span class="name-club">
-							            		<span class="name">Keven De Bruyne </span>
-							            		<span class="club">Manchester City </span>
-							            	</span>
-                            <span class="number"> 20(1) </span>
-                        </div>
-                    </li>
+                    {% endfor %}
 
-                    <li>
-                        <div class="assist02">
-                            <span class="number-no"> 4 </span>
-                            <span class="image">
-							            		<img class="image-radius image-40"
-                                                     src="{% static "frontend/images/assist03.png" %}" alt="club01"/>
-							            	</span>
-                            <span class="name-club">
-							            		<span class="name">Keven De Bruyne </span>
-							            		<span class="club">Manchester City </span>
-							            	</span>
-                            <span class="number"> 20(1) </span>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="assist02">
-                            <span class="number-no"> 5 </span>
-                            <span class="image">
-							            		<img class="image-radius image-40"
-                                                     src="{% static "frontend/images/assist03.png" %}" alt="club01"/>
-							            	</span>
-                            <span class="name-club">
-							            		<span class="name">Keven De Bruyne </span>
-							            		<span class="club">Manchester City </span>
-							            	</span>
-                            <span class="number"> 20(1) </span>
-                        </div>
-                    </li>
 
                     <li class="custom-button">
-                        <a href="#" class="view-full"> View All Top Scorers </a>
+                        <a href="{% url 'frontend:tables' %}" class="view-full"> View All Top Scorers </a>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
-
+    {% if clean_sheet %}
     <!-- 3. start block table list right column  -->
     <div class="block block-table-list">
         <div class="block-title">CLean Sheets</div>
         <div class="block-content">
             <div class="block-assists">
                 <ul>
-                    <li class="first-line">
-                        <div class="assist01">
-                            <div class="content">
-                                <span class="number"> 1 </span>
-                                <span class="name"> Sergio Agüero</span>
-                                <span><img src="{% static "frontend/images/club01.png" %}"
-                                           alt="club01"/>  Manchester City </span>
-                                <span> CLean Sheets</span>
-                                <span class="number"> 4 </span>
-                            </div>
-                            <div class="image"><img
-                                    src="{% static "frontend/images/assist02.png" %}" alt="club01"/>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist02">
-                            <span class="number-no"> 2 </span>
-                            <span class="image">
-                              <img class="image-radius image-40" src="{% static "frontend/images/assist03.png" %}"
-                                   alt="club01"/>
-                            </span>
-                            <span class="name-club">
-                              <span class="name">Keven De Bruyne </span>
-                              <span class="club">Manchester City </span>
-                            </span>
-                            <span class="number"> 20(1) </span>
-                        </div>
-                    </li>
+                    {% for right_clean_sheet_item in clean_sheet %}
 
-                    <li>
-                        <div class="assist02">
-                            <span class="number-no"> 3 </span>
-                            <span class="image">
-                              <img class="image-radius image-40" src="{% static "frontend/images/assist03.png" %}"
-                                   alt="club01"/>
-                            </span>
-                            <span class="name-club">
-                              <span class="name">Keven De Bruyne </span>
-                              <span class="club">Manchester City </span>
-                            </span>
-                            <span class="number"> 20(1) </span>
-                        </div>
-                    </li>
+                        {% if forloop.first %}
+                            <li class="first-line">
+                                <div class="assist01">
+                                    <div class="content">
+                                        <span class="number"> {{ forloop.counter }} </span>
+                                        <span class="name">{{ right_clean_sheet_item.name }}</span>
+                                        <span>
+                                             {% thumbnail right_clean_sheet_item.club.image "42x40" crop="center" as im %}
+                                                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_clean_sheet_item.club.name }}">
+                                             {% endthumbnail %}
+                                         {{ right_clean_sheet_item.club.name }}
+                                        </span>
+                                        <span> CLean Sheets</span>
+                                        <span class="number">  {{ right_clean_sheet_item.num_clean_sheet }} </span>
+                                    </div>
+                                    <div class="image">
+                                        {% thumbnail right_clean_sheet_item.image "115x125" crop="center" as im %}
+                                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_clean_sheet_item.name }}">
+                                        {% endthumbnail %}
+                                    </div>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li>
+                                <div class="assist02">
+                                    <span class="number-no"> {{ forloop.counter }}</span>
+                                    <span class="image">
+                                      {% thumbnail right_clean_sheet_item.image "42x40" crop="center" as im %}
+                                          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_clean_sheet_item.name }}">
+                                      {% endthumbnail %}
+                                    </span>
+                                    <span class="name-club">
+                                      <span class="name">{{ right_clean_sheet_item.name }}</span>
+                                      <span class="club">{{ right_clean_sheet_item.club.name }}</span>
+                                    </span>
+                                    <span class="number"> {{ right_clean_sheet_item.num_clean_sheet }}</span>
+                                </div>
+                            </li>
+                        {% endif %}
 
-                    <li>
-                        <div class="assist02">
-                            <span class="number-no"> 4 </span>
-                            <span class="image">
-                              <img class="image-radius image-40" src="{% static "frontend/images/assist03.png" %}"
-                                   alt="club01"/>
-                            </span>
-                            <span class="name-club">
-                              <span class="name">Keven De Bruyne </span>
-                              <span class="club">Manchester City </span>
-                            </span>
-                            <span class="number"> 20(1) </span>
-                        </div>
-                    </li>
+                     {% endfor %}
 
-                    <li>
-                        <div class="assist02">
-                            <span class="number-no"> 5 </span>
-                            <span class="image">
-                              <img class="image-radius image-40" src="{% static "frontend/images/assist03.png" %}"
-                                   alt="club01"/>
-                            </span>
-                            <span class="name-club">
-                              <span class="name">Keven De Bruyne </span>
-                              <span class="club">Manchester City </span>
-                            </span>
-                            <span class="number"> 20(1) </span>
-                        </div>
-                    </li>
+
 
                     <li class="custom-button">
-                        <a href="#" class="view-full"> View All Top Scorers </a>
+                        <a href="{% url 'frontend:tables' %}" class="view-full"> View All Clean Sheets</a>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
+    {% endif %}
 
-    <!-- 4. start block table list right column  -->
-    <div class="block block-table-list">
-        <div class="block-title">Manager of the Month</div>
-        <div class="block-content">
-            <div class="block-assists">
-                <ul>
-                    <li class="first-line">
-                        <div class="assist01">
-                            <div class="content">
-                                <span class="number"> 1 </span>
-                                <span class="name"> Josep Guardiola</span>
-                                <span><img src="{% static "frontend/images/club01.png" %}"
-                                           alt="club01"/>  Manchester City </span>
-                            </div>
-                            <div class="image"><img
-                                    src="{% static "frontend/images/assist02.png" %}" alt="club01"/>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist02">
-                            <span class="description">Matches</span>
-                            <span class="number red"> 65 </span>
-                        </div>
-                    </li>
+    {% for right_banner_index_item in banner_index %}
 
-                    <li>
-                        <div class="assist02">
-                            <span class="description">Win</span>
-                            <span class="number red"> 65 </span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist02">
-                            <span class="description">Draw</span>
-                            <span class="number red"> 65 </span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="assist02">
-                            <span class="description">Losses </span>
-                            <span class="number red"> 65 </span>
-                        </div>
-                    </li>
-
-                    <li class="custom-button">
-                        <a href="#" class="view-full"> Manager Profile </a>
-                    </li>
-                </ul>
-            </div>
+        <!-- 5. start block Banner right column  -->
+        <div class="block block-banner">
+            <a target="_blank" href="{{ right_banner_index_item.link }}">
+                <img src="{{ right_banner_index_item.image.url }}" alt="" class="">
+            </a>
         </div>
-    </div>
 
+    {% endfor %}
 
-    <!-- 5. start block Banner right column  -->
-    <div class="block block-banner">
-        <img src="{% static "frontend/images/banner02.jpg" %}" alt="Banner 01"/>
-    </div>
-
-    <!-- 6. start block Banner right column  -->
-    <div class="block block-banner">
-        <img src="{% static "frontend/images/banner03.jpg" %}" alt="Banner 01"/>
-    </div>
 </div>

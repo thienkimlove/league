@@ -5,28 +5,12 @@
     <!-- start of breadcrumbs -->
     <div class="breadcrumbs">
         <div class="container">
-            <h3> News </h3>
+            <h3>  Media Gallery </h3>
             <ul>
                 <li> <i class="fa fa-home"> </i> </li>
-                <li> <i class="fa fa-arrow-right"> </i> News </li>
+                <li> <i class="fa fa-arrow-right"> </i> Media Gallery </li>
             </ul>
 
-            <ul class="menu-news pull-right">
-                {% if active_category is not None %}
-                    <li> <a href="{% url 'frontend:news' %}"> All </a> </li>
-                {% else %}
-                     <li> <a href="{% url 'frontend:news' %}" class="active"> All </a> </li>
-                {% endif %}
-
-                {% for category in categories %}
-                    {% if category.id == active_category.id %}
-                        <li> <a href="{% url 'frontend:news' %}?category={{ category.slug }}" class="active"> {{ category.name }} </a> </li>
-                    {% else %}
-                        <li> <a href="{% url 'frontend:news' %}?category={{ category.slug }}"> {{ category.name }} </a> </li>
-                    {% endif %}
-                {% endfor %}
-
-            </ul>
         </div>
     </div>
 
@@ -39,20 +23,17 @@
                     <div class="news-list">
                         <!-- start item -->
 
-                        {% for post in posts %}
+                        {% for gallery in list_galleries %}
                             <div class="news-item style-v2">
                             <div class="images">
-                                <a href="{% url 'frontend:news_detail' post.slug %}">
-                                    {% thumbnail post.image "313x209" crop="center" as im %}
-                                        <img class="responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ post.name }}">
+                                <a href="{% url 'frontend:galleries_detail' gallery.slug %}">
+                                    {% thumbnail gallery.image "313x209" crop="center" as im %}
+                                        <img class="responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ gallery.name }}">
                                     {% endthumbnail %}
                                 </a>
                             </div>
                             <div class="new-content">
-                                <div class="news-name"> <a href="{% url 'frontend:news_detail' post.slug %}">{{ post.name }} </a></div>
-                                <div class="news-des">
-                                    {{ post.desc }}
-                                </div>
+                                <div class="news-name"> <a href="{% url 'frontend:galleries_detail' gallery.slug %}">{{ gallery.name }} </a></div>
                             </div>
                         </div>
                         {% endfor %}

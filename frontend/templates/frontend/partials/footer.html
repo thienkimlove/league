@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static thumbnail core_helper i18n %}
 <!-- start html footer -->
 <section class="footer">
     <div class="footer-top">
@@ -10,35 +10,25 @@
                     </div>
                 </div>
 
+            {%  sponsor_list as sponsors %}
+
                 <div class="col-md-10 col-sm-12 col-xs-12">
                     <div class="block brand-list">
                         <div class="block-title">Official <strong>Sponsors</strong> </div>
                         <div class="block-content">
                             <!-- Start brands images carousel -->
                             <div class="owl-carousel owl-theme" id="brands-carousel">
-                                <div class="item">
-                                    <img class="brands-image" src="{% static "frontend/images/brand01.jpg" %}" alt="">
-                                </div>
+
+                                {% for sponsor in sponsors %}
 
                                 <div class="item">
-                                    <img class="brands-image" src="{% static "frontend/images/brand01.jpg" %}" alt="">
+
+                                    {% thumbnail sponsor.image "147x80" crop="center" as im %}
+                                        <img class="brands-image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ sponsor.name }}">
+                                    {% endthumbnail %}
                                 </div>
 
-                                <div class="item">
-                                    <img class="brands-image" src="{% static "frontend/images/brand01.jpg" %}" alt="">
-                                </div>
-
-                                <div class="item">
-                                    <img class="brands-image" src="{% static "frontend/images/brand01.jpg" %}" alt="">
-                                </div>
-
-                                <div class="item">
-                                    <img class="brands-image" src="{% static "frontend/images/brand01.jpg" %}" alt="">
-                                </div>
-
-                                <div class="item">
-                                    <img class="brands-image" src="{% static "frontend/images/brand01.jpg" %}" alt="">
-                                </div>
+                                {%  endfor %}
 
                             </div>
                         </div>
@@ -73,19 +63,17 @@
                     </div>
                 </div>
 
+
+                {% load_menu_items as menu_items %}
+
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <div class="block block-link">
                         <div class="block-title"> League</div>
                         <div class="block-content">
                             <ul class="list-unstyled">
-                                <li> <a href="#"> Home </a> </li>
-                                <li> <a href="#"> Fixtures </a> </li>
-                                <li> <a href="#"> Result </a> </li>
-                                <li> <a href="#"> Tables </a> </li>
-                                <li> <a href="#"> Clubs </a> </li>
-                                <li> <a href="#"> Players </a> </li>
-                                <li> <a href="#"> Managers</a> </li>
-                                <li> <a href="#"> News </a> </li>
+                                {% for key, val in menu_items.items %}
+                                    <li><a href="{% url 'frontend:'|add:key %}" class="{% if page == key %}active{% endif %}">{{ val }}</a></li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>

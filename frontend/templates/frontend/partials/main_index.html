@@ -1,0 +1,305 @@
+{% load staticfiles i18n thumbnail core_helper %}
+<div class="col-md-9 col-sm-12 col-xs-12">
+    <!-- 1. start block news -->
+    <div class="block block-news">
+        <div class="block-content">
+            <!-- Start news-carousel carousel -->
+            <div class="owl-carousel owl-theme" id="news-carousel">
+                {% for post in block_1_posts %}
+                    <div class="item">
+                        <div class="news-item style-v1">
+                            <div class="images">
+                                <a href="{% url 'frontend:news_detail' post.slug %}">
+                                    {% thumbnail post.image "573x383" crop="center" as im %}
+                                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                             alt="{{ post.name }}">
+                                    {% endthumbnail %}
+                                </a>
+
+                            </div>
+                            <div class="new-content">
+                                <div class="time"><i class="fa fa-clock-o"> </i>{{ post.created_at }}</div>
+                                <div class="news-name"><a
+                                        href="{% url 'frontend:news_detail' post.slug %}">{{ post.name }}</a></div>
+                                <div class="news-des">
+                                    {{ post.desc }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+
+
+    {% for banner_1 in index_banner_1 %}
+        <!-- 2. start block banner  -->
+        <div class="block block-banner">
+            <a target="_blank" href="{{ banner_1.link }}"><img src="{{ banner_1.image.url }}" alt="" class=""></a>
+        </div>
+
+    {% endfor %}
+
+
+
+    <!-- 3. start block latest news  -->
+    {% if block_2_posts %}
+        <div class="block block-latestnew">
+
+            <div class="block-title">
+                <span> Latest news </span>
+                <a href="{% url 'frontend:news' %}" class="read-more"> More News <i class="fa fa-arrow-right"> </i></a>
+            </div>
+
+            {% with block_2_posts|first as first_block_2_post %}
+                <div class="block-content">
+                    <div class="news-item style-v2">
+                        <div class="images">
+                            <a href="{% url 'frontend:news_detail' first_block_2_post.slug %}">
+                                {% thumbnail first_block_2_post.image "391x261" crop="center" as im %}
+                                    <img class="responsive" src="{{ im.url }}" width="{{ im.width }}"
+                                         height="{{ im.height }}" alt="{{ first_block_2_post.name }}">
+                                {% endthumbnail %}
+                            </a>
+
+                        </div>
+                        <div class="new-content">
+
+                            <div class="news-name"><a
+                                    href="{% url 'frontend:news_detail' first_block_2_post.slug %}">{{ first_block_2_post.name }}</a>
+                            </div>
+
+                            <div class="time"><i class="fa fa-clock-o"> </i>{{ first_block_2_post.created_at }}</div>
+
+                            <div class="news-des">
+                                {{ first_block_2_post.desc }}
+                            </div>
+
+                            <div class="related-new">
+                                <ul>
+                                    {% for related_obj in first_block_2_post.tags.similar_objects|slice:"0:3" %}
+                                        <li>
+                                            <a href="{% url 'frontend:news_detail' related_obj.slug %}">{{ related_obj.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endwith %}
+        </div>
+    {% endif %}
+    <!-- 4. start Block news 02  -->
+    <div class="block block-news">
+        <!-- Start news-carousel carousel -->
+        <div class="owl-carousel owl-theme" id="news02-carousel">
+
+            {% for block_2_post in block_2_posts %}
+                {% if not forloop.first %}
+                    <div class="item">
+                        <div class="news-item style-v3">
+                            <div class="images">
+                                <a href="{% url 'frontend:news_detail' block_2_post.slug %}">
+                                    {% thumbnail block_2_post.image "276x190" crop="center" as im %}
+                                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                             alt="{{ block_2_post.name }}">
+                                    {% endthumbnail %}
+                                </a>
+                            </div>
+                            <div class="new-content">
+                                <div class="news-name"><a
+                                        href="{% url 'frontend:news_detail' block_2_post.slug %}">{{ block_2_post.name }}</a>
+                                </div>
+                                <div class="news-des">
+                                    {{ block_2_post.desc }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+
+    </div>
+    {% if galleries %}
+        <!--5. start block media gallery -->
+        <div class="block-media-gallery">
+            <div class="block-title">
+                <span> Media Gallery </span>
+                <a href="{% url 'frontend:galleries' %}" class="read-more"> More Gallery <i
+                        class="fa fa-arrow-right"> </i></a>
+
+            </div>
+            <div class="block-content">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        {% with galleries|first as first_galleries %}
+                            <div class="news-item style-v4">
+                                <div class="images">
+                                    <a href="{% url 'frontend:galleries_detail' first_galleries.slug %}">
+
+                                        {% thumbnail first_galleries.image "419x288" crop="center" as im %}
+                                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                                 alt="{{ first_galleries.name }}">
+                                        {% endthumbnail %}
+                                    </a>
+
+                                    <div class="icon-play"></div>
+                                </div>
+                                <div class="new-content">
+                                    <div class="news-name"><a
+                                            href="{% url 'frontend:galleries_detail' first_galleries.slug %}">{{ first_galleries.name }}</a>
+                                    </div>
+                                    <div class="time"><i class="fa fa-clock-o"> </i>{{ first_galleries.created_at }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+
+                        <!-- Start news-carousel carousel -->
+                        <div class="owl-carousel owl-theme" id="news03-carousel">
+
+                            {% for gallery in galleries %}
+
+                                {% if not forloop.first %}
+                                    <div class="item">
+                                        <div class="news-item style-v3">
+                                            <div class="images">
+
+                                                <a href="{% url 'frontend:galleries_detail' gallery.slug %}">
+                                                    {% thumbnail gallery.image "200x137" crop="center" as im %}
+                                                        <img src="{{ im.url }}" width="{{ im.width }}"
+                                                             height="{{ im.height }}" alt="{{ gallery.name }}">
+                                                    {% endthumbnail %}
+
+                                                </a>
+
+                                            </div>
+                                            <div class="new-content">
+                                                <div class="news-name"><a
+                                                        href="{% url 'frontend:galleries_detail' gallery.slug %}">{{ gallery.name }} </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    {% for banner_2 in index_banner_2 %}
+        <!-- 7. start block Banner  -->
+        <div class="block block-banner">
+            <a target="_blank" href="{{ banner_2.link }}"><img src="{{ banner_2.image.url }}" alt="" class=""></a>
+        </div>
+
+    {% endfor %}
+
+
+    <!-- 9. start block Lao Premier League on Social  -->
+    <div class="block block-lao-social">
+        <div class="block-title">
+            <span> Lao Premier League on Social </span>
+            <a href="#" class="read-more"> More Social <i class="fa fa-arrow-right"> </i></a>
+        </div>
+        <div class="block-content">
+            <ul class="social">
+                <li><a href="#" class="facebook"> <i class="fa fa-facebook"> </i> </a></li>
+                <li><a href="#" class="twister"> <i class="fa fa-google"> </i></a></li>
+                <li><a href="#" class="youtube"> <i class="fa fa-youtube"> </i> </a></li>
+                <li><a href="#"> <i class="fa fa-facebook"> </i> </a></li>
+                <li><a href="#"> <i class="fa fa-facebook"> </i> </a></li>
+            </ul>
+            <div class="row">
+
+                {% for social in socials %}
+                    <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="news-item style-v3">
+                            <div class="images">
+                                {% thumbnail social.image "264x182" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                         alt="{{ social.name }}">
+                                {% endthumbnail %}
+                                <div class="share-social">
+                                    <ul>
+                                        <li><i class="fa fa-{{ social.social_type }}"> </i>
+                                    </ul>
+                                    <div>{{ social.created_at|timesince }}</div>
+                                </div>
+                            </div>
+                            <div class="new-content">
+                                <div class="news-des">
+                                    {{ social.name }}
+                                    {{ social.social_link }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 9. start block Lao Premier League on Social  -->
+    <div class="block block-matchweek">
+        <div class="block-title"><span>Stats</span></div>
+        <div class="block-content">
+
+            <!-- Start matchweek-carousel -->
+            <div class="owl-carousel owl-theme" id="matchweek-carousel02">
+                {% for match_this_week in match_this_weeks %}
+
+                    <div class="item">
+                        <div class="matchweek-item">
+                            <div class="matchweek-content">
+                                <span class="time">{{ match_this_week.start_time|date:'D d M' }}</span>
+                                <span class="match-detail">
+                                      <span class="team">
+                                          {% thumbnail match_this_week.home_team.image "42x40" crop="center" as im %}
+                                              <img src="{{ im.url }}" width="{{ im.width }}"
+                                                   height="{{ im.height }}"
+                                                   alt="{{ match_this_week.home_team.name }}">
+                                          {% endthumbnail %}
+
+                                          <span class="team-name">  {{ match_this_week.home_team.name }} </span>
+                                    </span>
+                                    <span class="result-match">  {{ match_this_week.home_end_score }} - {{ match_this_week.away_end_score }} </span>
+                                    <span class="team">
+                                       {% thumbnail match_this_week.away_team.image "42x40" crop="center" as im %}
+                                           <img src="{{ im.url }}" width="{{ im.width }}"
+                                                height="{{ im.height }}"
+                                                alt="{{ match_this_week.away_team.name }}">
+                                       {% endthumbnail %}
+                                        <span class="team-name"> {{ match_this_week.away_team.name }}</span>
+                                    </span>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>

@@ -29,6 +29,7 @@ class PlayerForm(forms.ModelForm):
         }
         labels = settings.LABELS
 
+
 class CoachForm(forms.ModelForm):
     class Meta:
         model = Coach
@@ -38,6 +39,7 @@ class CoachForm(forms.ModelForm):
         }
         labels = settings.LABELS
 
+
 class RefereeForm(forms.ModelForm):
     class Meta:
         model = Referee
@@ -46,6 +48,7 @@ class RefereeForm(forms.ModelForm):
             'dob': SelectDateWidget(years=[x for x in range(1979, 2005)]),
         }
         labels = settings.LABELS
+
 
 class MatchForm(forms.ModelForm):
     class Meta:
@@ -58,10 +61,10 @@ class MatchForm(forms.ModelForm):
 
     class Media:
         pass
-        #js = ('core/js/ajax.js',)
+        # js = ('core/js/ajax.js',)
+
 
 class MatchDetailForm(forms.ModelForm):
-
     class Meta:
         model = MatchDetail
         fields = '__all__'

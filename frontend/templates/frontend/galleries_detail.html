@@ -10,8 +10,8 @@
             <h3> News </h3>
             <ul>
                 <li> <i class="fa fa-home"> </i> </li>
-                <li> <i class="fa fa-arrow-right"> </i> News </li>
-                <li> <i class="fa fa-arrow-right"> </i> {{ post.name }} </li>
+                <li> <i class="fa fa-arrow-right"> </i> Media Gallery </li>
+                <li> <i class="fa fa-arrow-right"> </i> {{ gallery.name }} </li>
             </ul>
 
         </div>
@@ -25,7 +25,7 @@
                 <div class="col-md-9 col-sm-12 col-xs-12">
 
                 <div>
-                    {{ post.content|safe|escape }}
+                    <img class="responsive" src="{{ gallery.image.url }}"  alt="{{ gallery.name }}">
                 </div>
 
                     {% for banner in banners %}

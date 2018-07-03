@@ -30,14 +30,14 @@
 
 <body>
 
-{% include 'frontend/header.html' %}
+{% include 'frontend/partials/header.html' %}
 
 
 {% block content %}
 
 {% endblock %}
 
-{% include 'frontend/footer.html' %}
+{% include 'frontend/partials/footer.html' %}
 
 
 <div id="top">
@@ -227,5 +227,8 @@
         })
     })
 </script>
+{% block frontend_script %}
+
+{% endblock %}
 </body>
 </html>

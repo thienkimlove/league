@@ -1,0 +1,47 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles core_helper i18n thumbnail %}
+
+{% block content %}
+
+    <section class="wrapper">
+        <div class="breadcrumbs style-v2">
+            <div class="container">
+
+                <div class="club-logo">
+                    <div class="image">
+                        {% thumbnail club.image "153x190" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ club.name }}">
+                        {% endthumbnail %}
+                    </div>
+                    <div class="content">
+                        <h2>{{ club.name }}</h2>
+                        <span> <img src="{% static 'frontend/images/icon-season.png' %}" alt="icon-season"/>{{ club.stadium.name }}</span>
+                        <span> <img src="{% static 'frontend/images/icon-home.png' %}" alt="icon home"/>Official Website: {{ club.website }}</span>
+                    </div>
+                </div>
+
+                <ul class="menu-news-v2 pull-left">
+                    <li> <a href="#" class="active"> All </a> </li>
+                    {% comment %}<li> <a href="#"> Fixtures  </a> </li>
+                    <li> <a href="#"> Taliking Tactics  </a> </li>
+                    <li> <a href="#"> Transfers </a> </li>
+                    <li> <a href="#"> Fixtures </a> </li>
+                    <li> <a href="#"> Yount </a> </li>{% endcomment %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main content homepage -->
+        <div class="main-content">
+            <div class="container">
+                <div class="row">
+                    <!-- start left column -->
+                    {% include "frontend/partials/main_index.html" %}
+
+                    {% right_content main_club_id %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

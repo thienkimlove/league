@@ -130,9 +130,9 @@ header{font-weight: 400;position: relative;}
 .block-link {}
 .block-link li {padding-bottom:20px;}
 
-a{outline: none; color: #fff;}
+a{outline: none; color: #000;} 
 a:hover{
-	color: #eb4c4c;
+	color: #000;
 	text-decoration: underline;
 }
 
@@ -171,7 +171,7 @@ img{
 .matchweek-content .time { display: block; clear: both; color: #5ac3c4; padding-bottom: 10px; text-align: center; font-family: 'CoreSansC-35Light'; font-size: 13px;}
 .matchweek-content .match-detail {display: flex;}
 .matchweek-content .team-name {  color: #fff; line-height: 40px; width: 100%; text-align: center; display: inline-block;}
-.matchweek-content .result-match { padding:8px 12px ; font-size: 24px; color: #f8f992; font-family: 'CoreSansC-65Bold';}
+.matchweek-content .result-match { padding:8px 12px ; font-size: 19px; color: #f8f992; font-family: 'CoreSansC-65Bold';}
 
 .matchweek-link { background: #254152; padding-top:50px; padding-left:18px; padding-right:20px; vertical-align: middle;}
 .matchweek-link a { text-transform: uppercase; color: #f8f992;vertical-align: middle;}
@@ -193,9 +193,13 @@ img{
 .news-item .new-content .time { color: #828282; padding-bottom:20px;}
 .news-item .new-content .news-name { font-size:20px;padding-bottom:20px; font-family: 'CoreSansC-65Bold';}
 
-.news-item.style-v1 {display: inline-flex; background: #fff url('../images/bg-new.jpg') no-repeat right top; position:relative;}
-.news-item.style-v1 .images { width: 66%; display: inline-block;}
-.news-item.style-v1 .new-content { width: 33%; display:inline-block; vertical-align: top;} 
+.news-item.style-v1 {background: #fff url('../images/bg-new.jpg') no-repeat right top; position:relative; display: block; width: 100%}
+.news-item.style-v1 .images { width: 66%; display: inline-block; overflow: hidden;}
+.news-item.style-v1 .images img {
+	background-repeat: no-repeat;
+    background-size: contain;
+}
+.news-item.style-v1 .new-content { width: 33%; display:inline-block; vertical-align:top;} 
 .news-item.style-v1 .new-content .news-name { color:#124dab;}
 
 .news-item.style-v2 .new-content { padding:0;}
@@ -248,13 +252,14 @@ img{
 .block-latestnew .block-title,
 .block-media-gallery .block-title,
 .block-statistic .block-title,
-.block-lao-social .block-title{ font-size: 20px; color: #333;font-family: 'CoreSansC-65Bold'; padding-bottom:20px;}
+.block-lao-social .block-title,
+.block-news .block-title{ font-size: 20px; color: #333;font-family: 'CoreSansC-65Bold'; padding-bottom:20px;}
 
 .block-latestnew .block-title a.read-more,
 .block-media-gallery .block-title a.read-more,
 .block-statistic .block-title a.read-more,
-.block-lao-social .block-title a.read-more
- {
+.block-lao-social .block-title a.read-more,
+.block-news .block-title a.read-more {
 	float:right;
 	background: #e8e8e8;
 	border-radius: 5px;

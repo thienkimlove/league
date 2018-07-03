@@ -1,0 +1,122 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail core_helper %}
+
+{% block content %}
+    <!-- start of breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <h3> Table </h3>
+            <ul>
+                <li><i class="fa fa-home"> </i></li>
+                <li><i class="fa fa-arrow-right"> </i> Table</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content homepage -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <!-- start left column -->
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <form method="get" id="table_filter">
+                        <div class="block block-search-filter">
+
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <label> Filter by Season</label>
+                                        <select name="season">
+                                            {% for season in seasons %}
+                                                <option {% if request.GET.season == season.id %}selected{% endif %} value="{{ season.id }}">{{ season.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <label> Filter by Matchweek</label>
+                                        <select name="match_week">
+                                            <option {% if request.GET.match_week == '0' or not request.GET.match_week  %}selected{% endif %} value="0">All</option>
+                                            <option {% if request.GET.match_week == '1' %}selected{% endif %} value="1">This week</option>
+
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-6 col-xs-12">
+                                        <button id="table_filter_submit" class="btn"> Reset Filters</button>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </form>
+
+                    <!-- start block filter -->
+                    <table style="width: 100%" class="filter table-responsive">
+                        <tr>
+                            <th> Position</th>
+                            <th> Club</th>
+                            <th> Play</th>
+                            <th> Won</th>
+                            <th> Drawn</th>
+                            <th> Lost</th>
+                            <th> GF</th>
+                            <th> GA</th>
+                            <th> GD</th>
+                            <th> Points</th>
+                            <th> Next</th>
+                        </tr>
+
+                        {% for table in tables %}
+                        <tr class="{% odd_or_even_class forloop.counter %}">
+
+                        <td> {{ forloop.counter }} </td>
+                        <td>
+                            {% thumbnail table.image "42x40" crop="center" as im %}
+                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                     alt="{{ table.name }}">
+                            {% endthumbnail %}
+                            {{ table.name }}
+                        </td>
+                        <td> {{ table.mp }} </td>
+                        <td>  {{ table.win }} </td>
+                        <td>  {{ table.draw }} </td>
+                        <td> {{ table.lost }} </td>
+                        <td> {{ table.gf }}</td>
+                        <td> {{ table.ga }}</td>
+                        <td> {{ table.gd }}</td>
+                        <td> {{ table.num_pts }} </td>
+                        <td>
+                            {% get_next_match_club table.id as get_next_match_club %}
+                            {% if get_next_match_club %}
+                                {% thumbnail get_next_match_club.image "42x40" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                         alt="{{ get_next_match_club.name }}">
+                                {% endthumbnail %}
+                            {% endif %}
+                        </td>
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </table>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block frontend_script %}
+    {{ super }}
+    <script>
+        $(function () {
+            $('#table_filter_submit').click(function () {
+                $('#table_filter').submit()
+            });
+        });
+    </script>
+{% endblock %}

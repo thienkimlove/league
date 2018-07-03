@@ -11,6 +11,7 @@ from core.resources import PostResource
 
 admin.site.register(LogEntry, LogEntryAdmin)
 
+
 class GeneralWithTagAdmin(admin.ModelAdmin):
     search_fields = ['name', ]
     list_filter = (
@@ -25,7 +26,7 @@ class GeneralWithTagAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(ExportMixin, GeneralWithTagAdmin):
-    list_display = ('name', 'image_tag', 'views', 'tag_list', 'display_place', 'created_at', 'status')
+    list_display = ('name', 'image_tag', 'views', 'tag_list', 'display_place', 'club_list', 'created_at', 'status')
 
     form = PostForm
     resource_class = PostResource
@@ -34,7 +35,9 @@ class PostAdmin(ExportMixin, GeneralWithTagAdmin):
         base_formats.XLS,
     ]
 
+
 admin.site.register(Post, PostAdmin)
+
 
 class PlayerAdmin(admin.ModelAdmin):
     search_fields = ['name', ]
@@ -44,6 +47,7 @@ class PlayerAdmin(admin.ModelAdmin):
     list_display = ('name', 'club', 'dob', 'nationality', 'height', 'weight', 'position', 'created_at', 'status')
     form = PlayerForm
 
+
 class CoachAdmin(admin.ModelAdmin):
     search_fields = ['name', ]
     list_filter = (
@@ -51,6 +55,7 @@ class CoachAdmin(admin.ModelAdmin):
     )
     list_display = ('name', 'club', 'dob', 'nationality', 'height', 'weight', 'created_at', 'status')
     form = CoachForm
+
 
 class RefereeAdmin(admin.ModelAdmin):
     search_fields = ['name', ]
@@ -61,24 +66,26 @@ class RefereeAdmin(admin.ModelAdmin):
     form = RefereeForm
 
 
-
-
 class GeneralAdmin(admin.ModelAdmin):
     pass
+
 
 class MatchDetailInline(admin.TabularInline):
     model = MatchDetail
 
+
 class MatchAdmin(admin.ModelAdmin):
-    #autocomplete_fields = ['start_player_home_team', 'start_player_away_team']
+    # autocomplete_fields = ['start_player_home_team', 'start_player_away_team']
     inlines = [
         MatchDetailInline,
     ]
     form = MatchForm
+
     class Media:
         js = (
-            'core/js/bind_fields.js',   # app static folder
+            'core/js/bind_fields.js',  # app static folder
         )
+
 
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Club, GeneralAdmin)
@@ -90,3 +97,9 @@ admin.site.register(League, GeneralAdmin)
 admin.site.register(Season, GeneralAdmin)
 admin.site.register(Position, GeneralAdmin)
 admin.site.register(Banner, GeneralAdmin)
+admin.site.register(Gallery, GeneralAdmin)
+admin.site.register(Social, GeneralAdmin)
+admin.site.register(Category, GeneralAdmin)
+admin.site.register(BannerPosition, GeneralAdmin)
+admin.site.register(Sponsor, GeneralAdmin)
+admin.site.register(MatchAction, GeneralAdmin)

@@ -1,31 +1,22 @@
-
 from django.db import models
 from django.db.models.signals import post_save
 
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from smart_selects.db_fields import ChainedForeignKey, ChainedManyToManyField
 from taggit.managers import TaggableManager
 
-TYPE_CHOICES = (
-    ('goal_keeper', _("Goal Keeper")),
-    ('forward', _("Forward")),
-    ('defender', _("Defender")),
-    ('winger', _("Winger")),
-    ('middle_defender', _("Middle Defender")),
-    ('middle_attacker', _("Middle Attacker")),
-)
-
-DEFAULT_COUNTRY='VN'
-
+DEFAULT_COUNTRY = 'VN'
 
 
 class GeneralCharField(models.CharField):
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 191
         super().__init__(*args, **kwargs)
+
 
 def site_slug(data):
     vietnamese_map = {
@@ -50,6 +41,7 @@ def site_slug(data):
     slug = slugify(data.translate(vietnamese_map))
     return slug
 
+
 class GeneralSlug(GeneralCharField):
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 191
@@ -59,12 +51,13 @@ class GeneralSlug(GeneralCharField):
         kwargs['db_index'] = True
         super().__init__(*args, **kwargs)
 
+
 class SiteSlug(models.Model):
     slug = GeneralCharField()
     content = GeneralCharField()
+
     class Meta:
         unique_together = ('slug', 'content',)
-
 
 
 class TimeStampedModel(models.Model):
@@ -74,6 +67,7 @@ class TimeStampedModel(models.Model):
     """
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         abstract = True
         ordering = ["-created_at"]
@@ -99,7 +93,6 @@ class TimeStampedModel(models.Model):
                 self.slug = self._get_unique_slug()
         super().save()
 
-
     def __str__(self):
         if hasattr(self, 'name'):
             return "{0}".format(self.name)
@@ -114,27 +107,37 @@ class TimeStampedModel(models.Model):
         if hasattr(self, 'image') and self.image:
             return mark_safe('<img src="%s" width="150" />' % self.image.url)
         return None
+
     image_tag.short_description = _('Image')
+
 
 class Stadium(TimeStampedModel):
     name = GeneralCharField(null=True, default=None)
     capable = models.PositiveIntegerField(null=True, default=None, blank=True)
     image = models.ImageField(null=True, default=None, blank=True)
     status = models.BooleanField(default=True)
+
     class Meta:
         verbose_name = _('Stadium')
         verbose_name_plural = _('Stadiums')
 
+
 class Season(TimeStampedModel):
     name = GeneralCharField(null=True, default=None)
+    start_date = models.DateField(null=True, default=None, blank=True)
+    end_date = models.DateField(null=True, default=None, blank=True)
     status = models.BooleanField(default=True)
+
     class Meta:
         verbose_name = _('Season')
         verbose_name_plural = _('Seasons')
 
+
 class Position(TimeStampedModel):
     name = GeneralCharField(null=True, default=None)
     status = models.BooleanField(default=True)
+    is_goal_keeper = models.BooleanField(default=False)
+
     class Meta:
         verbose_name = _('Position')
         verbose_name_plural = _('Positions')
@@ -145,6 +148,7 @@ class League(TimeStampedModel):
     slug = GeneralSlug()
     season = models.ForeignKey(Season, on_delete=models.CASCADE, null=True, default=None, blank=True)
     status = models.BooleanField(default=True)
+
     class Meta:
         verbose_name = _('League')
         verbose_name_plural = _('Leagues')
@@ -152,14 +156,15 @@ class League(TimeStampedModel):
 
 class Club(TimeStampedModel):
     name = GeneralCharField(null=True, default=None)
+    website = GeneralCharField(null=True, default=None, blank=True)
     slug = GeneralSlug()
     image = models.ImageField(null=True, default=None, blank=True)
     stadium = models.ForeignKey(Stadium, on_delete=models.CASCADE, blank=True, null=True, default=None)
     status = models.BooleanField(default=True)
+
     class Meta:
         verbose_name = _('Club')
         verbose_name_plural = _('Clubs')
-
 
 
 class Player(TimeStampedModel):
@@ -173,6 +178,7 @@ class Player(TimeStampedModel):
     club = models.ForeignKey(Club, on_delete=models.CASCADE, blank=True, null=True, default=None)
     image = models.ImageField(null=True, default=None, blank=True)
     status = models.BooleanField(default=True)
+
     class Meta:
         verbose_name = _('Player')
         verbose_name_plural = _('Players')
@@ -181,6 +187,11 @@ class Player(TimeStampedModel):
 class PlayerHistory(TimeStampedModel):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    date = models.DateField(null=True, default=None, blank=True)
+
+    class Meta:
+        unique_together = ('player', 'club', 'date')
+
 
 class Referee(TimeStampedModel):
     name = GeneralCharField(null=True, default=None)
@@ -190,10 +201,10 @@ class Referee(TimeStampedModel):
     weight = models.PositiveSmallIntegerField(null=True, default=None, blank=True)
     image = models.ImageField(null=True, default=None, blank=True)
     status = models.BooleanField(default=True)
+
     class Meta:
         verbose_name = _('Referee')
         verbose_name_plural = _('Referees')
-
 
 
 class Coach(TimeStampedModel):
@@ -205,9 +216,20 @@ class Coach(TimeStampedModel):
     image = models.ImageField(null=True, default=None, blank=True)
     status = models.BooleanField(default=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, blank=True, null=True, default=None)
+
     class Meta:
         verbose_name = _('Coach')
         verbose_name_plural = _('Coaches')
+
+
+class CoachHistory(TimeStampedModel):
+    coach = models.ForeignKey(Coach, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    date = models.DateField(null=True, default=None, blank=True)
+
+    class Meta:
+        unique_together = ('coach', 'club', 'date')
+
 
 class Match(TimeStampedModel):
     home_team = models.ForeignKey(Club, related_name='home_matches', on_delete=models.CASCADE, null=True, default=None)
@@ -226,40 +248,44 @@ class Match(TimeStampedModel):
         related_name='start_away_team')
 
     referee = models.ForeignKey(Referee, on_delete=models.CASCADE)
-    start_time = models.DateTimeField(null=True, default=None)
+    start_time = models.DateTimeField(null=True)
     end_time = models.DateTimeField(null=True, default=None)
     stadium = models.ForeignKey(Stadium, on_delete=models.CASCADE)
     league = models.ForeignKey(League, on_delete=models.CASCADE)
-    home_end_score = models.PositiveSmallIntegerField(default=0)
-    away_end_score = models.PositiveSmallIntegerField(default=0)
+    home_end_score = models.SmallIntegerField(default=0)
+    away_end_score = models.SmallIntegerField(default=0)
     status = models.BooleanField(default=True)
+
     class Meta:
         verbose_name = _('Match')
         verbose_name_plural = _('Matches')
 
     def __str__(self):
-        return "{0} VS {0}".format(self.home_team.name, self.away_team.name)
+        return "{0} VS {1} ({2} - {3})".format(self.home_team.name, self.away_team.name, self.home_end_score,
+                                               self.away_end_score)
+
+
+class MatchAction(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None, unique=True)
 
 
 class MatchDetail(TimeStampedModel):
-    ACTION_CHOICES = (
-        ('in', _("In")),
-        ('out', _("Out")),
-        ('score', _("Score")),
-        ('throw', _("Throw")),
-        ('free_kick_corner', _("Free kick corner penalty")),
-        ('free_kick_penalty', _("Free kick penalty")),
-        ('yellow_card', _("Yellow Card")),
-        ('red_card', _("Red Card")),
-    )
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
-    action = GeneralCharField(choices=ACTION_CHOICES)
+    action = models.ForeignKey(MatchAction, on_delete=models.CASCADE, blank=True, null=True)
+    is_score = models.BooleanField(default=False)
+    is_penalty = models.BooleanField(default=False)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, default=None)
     time = models.DateTimeField(null=True, default=None, blank=True)
 
 
-class Post(TimeStampedModel):
+class Category(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+    desc = models.TextField(blank=True, null=True)
+    slug = GeneralSlug()
+    status = models.BooleanField(default=True)
 
+
+class Post(TimeStampedModel):
     DISPLAY_CHOICES = (
         ('block_1', _("Vị trí trung tâm trang chủ")),
         ('block_2', _("Block 2 trang chủ")),
@@ -275,23 +301,30 @@ class Post(TimeStampedModel):
     tags = TaggableManager()
     views = models.IntegerField(default=0, editable=False)
     display_place = GeneralCharField(choices=DISPLAY_CHOICES, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None, null=True)
+    clubs = models.ManyToManyField(Club)
 
     class Meta:
         verbose_name = _('Post')
         verbose_name_plural = _('Posts')
 
+    def club_list(self):
+        if hasattr(self, 'clubs'):
+            return ', '.join(s.name for s in self.clubs.all())
+        return None
+
+    club_list.short_description = _('Clubs')
+
+
+class BannerPosition(TimeStampedModel):
+    name = GeneralCharField()
+    position_key = GeneralCharField()
+
 
 class Banner(TimeStampedModel):
-
-    POSITION_CHOICES = (
-        ('index_1', _("Vị trí thứ nhất trang chủ")),
-        ('index_2', _("Vị trí thứ 2 trang chủ")),
-
-    )
-
     name = GeneralCharField()
     link = GeneralCharField(blank=True, null=True)
-    position = GeneralCharField(choices=POSITION_CHOICES)
+    position = models.ForeignKey(BannerPosition, on_delete=models.CASCADE, null=True, default=None)
     image = models.ImageField(null=True, default=None, blank=True)
     status = models.BooleanField(default=True)
 
@@ -299,9 +332,76 @@ class Banner(TimeStampedModel):
         verbose_name = _('Banner')
         verbose_name_plural = _('Banners')
 
+
+class Gallery(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+    slug = GeneralSlug()
+    status = models.BooleanField(default=True)
+    image = models.ImageField(blank=True, null=True)
+    clubs = models.ManyToManyField(Club)
+
+    class Meta:
+        verbose_name = _('Gallery')
+        verbose_name_plural = _('Galleries')
+
+    def club_list(self):
+        if hasattr(self, 'clubs'):
+            return ', '.join(s.name for s in self.clubs.all())
+        return None
+
+    club_list.short_description = _('Clubs')
+
+
+class Sponsor(TimeStampedModel):
+    name = GeneralCharField(null=True, default=None)
+    link = GeneralCharField(null=True, default=None, blank=True)
+    slug = GeneralSlug()
+    status = models.BooleanField(default=True)
+    image = models.ImageField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Sponsor')
+        verbose_name_plural = _('Sponsors')
+
+
+class Social(TimeStampedModel):
+    SOCIAL_CHOICES = (
+        ('facebook', _("Facebook")),
+        ('google', _("Google")),
+        ('twitter', _("Twitter")),
+
+    )
+
+    name = GeneralCharField(null=True, default=None)
+    status = models.BooleanField(default=True)
+    image = models.ImageField(blank=True, null=True)
+    social_type = GeneralCharField(choices=SOCIAL_CHOICES, blank=True, null=True)
+    social_link = GeneralCharField(blank=True, null=True)
+    clubs = models.ManyToManyField(Club)
+
+    class Meta:
+        verbose_name = _('Social')
+        verbose_name_plural = _('Socials')
+
+    def club_list(self):
+        if hasattr(self, 'clubs'):
+            return ', '.join(s.name for s in self.clubs.all())
+        return None
+
+    club_list.short_description = _('Clubs')
+
+
 # Signals
 
 def save_or_create_player_history(sender, instance, created, **kwargs):
-    PlayerHistory.objects.create(player=instance, club_id=instance.club_id)
+    PlayerHistory.objects.get_or_create(player=instance, club_id=instance.club_id, date=now().strftime('%Y-%m-%d'))
+
 
 post_save.connect(save_or_create_player_history, sender=Player)
+
+
+def save_or_create_coach_history(sender, instance, created, **kwargs):
+    CoachHistory.objects.get_or_create(coach=instance, club_id=instance.club_id, date=now().strftime('%Y-%m-%d'))
+
+
+post_save.connect(save_or_create_coach_history, sender=Coach)

@@ -15,10 +15,11 @@ import os
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
+from dotenv import find_dotenv, load_dotenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+load_dotenv(os.path.join(BASE_DIR, '.env'), override=True, verbose=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -27,10 +28,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ei%*klmg%qog!9_mb4!-xb-^-+e@nq!m)+9l%o3unm!ftc&qgx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+DEBUG = (os.environ.get('DEBUG', 'False') == 'True')
 
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
 # Application definition
 
@@ -93,24 +94,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'league',
-        'USER': 'root',
-        'PASSWORD': 'tieungao',
-        'HOST': '127.0.0.1',
+        'NAME': os.environ.get('DB_NAME', 'league'),
+        'USER': os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASS', 'tieungao'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
         'PORT': '3306',
-        'OPTIONS' : {
+        'OPTIONS': {
             'charset': 'utf8mb4',
         }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -130,7 +129,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -144,20 +142,15 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
 MEDIA_URL = '/media/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-DEFAULT_CHARSET='utf-8'
-
-LOG_FILE = os.path.join(BASE_DIR, 'debug.log')
+DEFAULT_CHARSET = 'utf-8'
 
 if DEBUG:
     LOGGING = {
@@ -177,12 +170,11 @@ if DEBUG:
         }
     }
 
-
 EXTENSIONS = getattr(settings, "FILEBROWSER_EXTENSIONS", {
-    'Image': ['.jpg','.jpeg','.gif','.png','.tif','.tiff', '.JPG','.JPEG','.GIF','.PNG','.tif','.tiff'],
-    'Document': ['.pdf','.doc','.rtf','.txt','.xls','.csv'],
-    'Video': ['.mov','.wmv','.mpeg','.mpg','.avi','.rm'],
-    'Audio': ['.mp3','.mp4','.wav','.aiff','.midi','.m4p']
+    'Image': ['.jpg', '.jpeg', '.gif', '.png', '.tif', '.tiff', '.JPG', '.JPEG', '.GIF', '.PNG', '.tif', '.tiff'],
+    'Document': ['.pdf', '.doc', '.rtf', '.txt', '.xls', '.csv'],
+    'Video': ['.mov', '.wmv', '.mpeg', '.mpg', '.avi', '.rm'],
+    'Audio': ['.mp3', '.mp4', '.wav', '.aiff', '.midi', '.m4p']
 })
 
 JSON_EDITOR_JS = 'https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/5.14.0/jsoneditor.js'
@@ -205,26 +197,26 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 CONSTANCE_CONFIG = {
     'FB_ID': ('188252524956805', _('Facebook ID'), str),
     'SITE_NAME': ('Sitename', _('Site name'), str),
-    #'GOOGLE': ('', _('Google Analytic'), 'ck_editor'),
+    # 'GOOGLE': ('', _('Google Analytic'), 'ck_editor'),
     'GOOGLE': ('', _('Google Analytic'), str),
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
     'Social': ('FB_ID', 'SITE_NAME', 'GOOGLE'),
 }
-#relative path to MEDIA
+# relative path to MEDIA
 CKEDITOR_UPLOAD_PATH = "uploads/"
-#All uploaded files are slugified by default. To disable this feature
-CKEDITOR_UPLOAD_SLUGIFY_FILENAME=False
+# All uploaded files are slugified by default. To disable this feature
+CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-#CKEDITOR_BROWSE_SHOW_DIRS=True
-#CKEDITOR_RESTRICT_BY_DATE=True
+# CKEDITOR_BROWSE_SHOW_DIRS=True
+# CKEDITOR_RESTRICT_BY_DATE=True
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono',
         # 'skin': 'office2013',
         'width': '100%',
-        'resize_dir' : 'both',
+        'resize_dir': 'both',
         'toolbar_Basic': [
             ['Source', '-', 'Bold', 'Italic']
         ],
@@ -244,7 +236,8 @@ CKEDITOR_CONFIGS = {
                        'Language']},
             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
             {'name': 'insert',
-             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe', 'CodeSnippet']},
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe',
+                       'CodeSnippet']},
             '/',
             {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
             {'name': 'colors', 'items': ['TextColor', 'BGColor']},
@@ -268,14 +261,14 @@ CKEDITOR_CONFIGS = {
         # 'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
         'tabSpaces': 4,
         'extraPlugins': ','.join([
-            'uploadimage', # the upload image feature
+            'uploadimage',  # the upload image feature
             # your extra plugins here
             'div',
             'autolink',
             'autoembed',
             'embedsemantic',
             'autogrow',
-            #'devtools',
+            # 'devtools',
             'codesnippet',
             'widget',
             'lineutils',
@@ -288,7 +281,7 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-LABELS =  {
+LABELS = {
     'name': 'Tên',
 }
 

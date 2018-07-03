@@ -35,3 +35,13 @@ We must install latest version of autocomplete light
 
 `pip install -e git+https://github.com/yourlabs/django-autocomplete-light.git#egg=django-autocomplete-light --upgrade`
 
+#### Edit Css file and html file for frontend on Server
+
+* Where CSS files store `/var/www/html/league/frontend/static/`
+
+* Where Html Views file Store `/var/www/html/league/frontend/templates/frontend/`
+
+* After change the CSS and HTML files access to link `http://league.antim.vn/reload` to make CSS HTML affected.
+
+
+
