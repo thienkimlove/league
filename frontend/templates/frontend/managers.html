@@ -31,7 +31,7 @@
                                     <select name="club">
                                         <option>All club</option>
                                         {% for club in clubs %}
-                                            <option {% if request.GET.club == club.id %}selected{% endif %} value="{{ club.id }}">{{ club.name }}</option>
+                                            <option {% if request.GET.club == club.id|slugify %}selected{% endif %} value="{{ club.id }}">{{ club.name }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

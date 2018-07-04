@@ -71,10 +71,30 @@ header{font-weight: 400;position: relative;}
 
 .nav-links {}
 .nav-links li {display: inline-block; margin:0;}
-.nav-links li a {font-size: 14px;padding: 15px 10px;}
+.nav-links li a {font-size: 14px;padding: 18px 10px; color: #fff; position: relative;}
+.nav-links li a:after {
+	width: 0; 
+	height: 0; 
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid #fff;
+	content: "";
+	position: absolute;
+	bottom:0;
+	left:45%;
+	opacity: 0;
+	visibility: hidden;
+}
+
 .nav-links li a:hover, 
 .nav-links li a:focus{color: #e1e286;background: none;}
 .nav-links li a.active {color: #e1e286;}
+
+.nav-links li a:hover:after,
+.nav-links li a.active:after {
+	opacity: 1;
+	visibility: visible;
+}
 
 .footer {}
 .footer-top{
@@ -83,9 +103,9 @@ header{font-weight: 400;position: relative;}
 	position: relative;
 	padding:10px 0;
 }
-.logo-footer { border-right:1px solid #497189; padding-right: 10px;}
+.logo-footer { border-right:1px solid #497189; padding: 10px 10px 10px 0;}
 .brand-list { display: flex;}
-.brand-list .block-title {color: #497189; width: 15%; padding-right:20px; font-size: 17px; text-transform: uppercase; padding-top: 10px; }
+.brand-list .block-title {color: #fff; width: 15%; padding-right:20px; font-size: 17px; text-transform: uppercase; padding-top: 10px; }
 .brand-list .block-content { padding:0 40px; position: relative; overflow: hidden; }
 .brand-list .owl-nav { position: absolute; top: 0%; margin-top: 0; width: 100%;}
 .brand-list .owl-nav button { border:2px solid #5e8ca8 !important; color: #5e8ca8!important; width: 36px; height: 36px; opacity: 1; visibility: visible;
@@ -97,6 +117,10 @@ header{font-weight: 400;position: relative;}
 .footer-center {background: #102129; padding: 30px 0;}
 .footer-bottom {background: #06141b; padding: 25px 0; color:#fff;}
 .footer-bottom .copyright a { color:#e1e286}
+
+.footer .block-link .list-unstyled a {
+	color: #fff;
+}
 
 .block-aboutus { margin-bottom: 30px;}
 .block-aboutus .block-content { color: #5ac3c4}
@@ -110,18 +134,15 @@ header{font-weight: 400;position: relative;}
 }
 .block-social li a:hover,
 .block-social li a:focus {
-	background:#e1e286; 
+	background:transparent; 
 	border-color:#e1e286;
-	color: #000;
+	color: #e1e286;
 }
 .social { margin: 20px 0; padding: 0;}
 .social li { list-style: none; display: inline-block; margin-right:2px; text-align: center; }
 .social li a {display: block;border-radius:50%; width: 35px; height: 35px;  
-	background: #3b5998; color: #fff; text-align: center; line-height: 30px;
+	background: transparent; color: #fff; text-align: center; line-height: 30px;
 }
-.social li a.facebook { background: #3b5998;}
-.social li a.twister {background: #01aced}
-.social li a.youtube {background: #f00;}
 
 .block-aboutus .block-title,
 .block-social .block-title,
@@ -322,7 +343,7 @@ img{
 .assist01 .content {padding:10px 15px;}
 .assist01 .content span { display: block; font-size: 13px; font-family: 'CoreSansC-35Light';}
 .assist01 .content span.number,
-.assist01 .content span.name {font-family: 'CoreSansC-65Bold'; font-size: 16px; text-transform: uppercase;}
+.assist01 .content span.name {font-family: 'CoreSansC-65Bold'; font-size: 16px; text-transform: uppercase; color: #000;}
 .assist01 .image { position: absolute; bottom:0; right:0;}
 
 .assist02 {padding:10px 15px; vertical-align: middle; display:table;width: 100%}
@@ -330,7 +351,7 @@ img{
 .assist02 .number-no {width:10%}
 .assist02 .image {width:20%}
 .assist02 .name-club { width: 60%}
-.assist02 .name {font-family: 'CoreSansC-65Bold'; display: block;}
+.assist02 .name {font-family: 'CoreSansC-65Bold'; display: block; color: #000;}
 .assist02 .club {font-size: 13px; font-family: 'CoreSansC-35Light'; display: block;}
 .assist02 .number {font-family: 'CoreSansC-65Bold'; margin-right: 0; width: 10%;}
 .assist02 .number.red { color: #d8434e; background: transparent;}
@@ -773,6 +794,7 @@ button.load-more { margin:20px auto 40px; background: #124dab; padding:10px 40px
 	.logo {text-align: center;}
 	.club-team { display: none; }
 
+	.nav-links li a:after { display: none; }
 	.news-item.style-v1,
 	.news-item.style-v5 { display: block; }
 
@@ -801,9 +823,6 @@ button.load-more { margin:20px auto 40px; background: #124dab; padding:10px 40px
 	.brand-list .block-title { text-align: center; padding-bottom:20px; }
 
 	.logo-footer { border:0; text-align: center; }
-
-
-	
 }
 
 @media(max-width:480px) {

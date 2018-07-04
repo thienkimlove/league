@@ -4,7 +4,6 @@ import subprocess
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from datetime import datetime, timedelta
 # Create your views here.
 from django.utils.timezone import now
 
@@ -21,37 +20,42 @@ def reload(request):
     return HttpResponse("OK")
 
 
-def load_fixture_or_result(request, fixture=False):
+def load_fixture_or_result(request, fixture=False, club=None):
+
     seasons = Season.objects.filter(status=True).all()
-    clubs = Club.objects.filter(status=True).all()
     banners = Banner.objects.filter(status=True).filter(position__position_key='normal_page').all()
     results = Match.objects.filter(status=True)
 
     if request.GET.get('season'):
         results = results.filter(league__season=request.GET.get('season'))
 
-    if request.GET.get('club'):
-        results = results.filter(Q(home_team=request.GET.get('club')) | Q(away_team=request.GET.get('club')))
+    if club is not None:
+        clubs = None
+        results = results.filter(Q(home_team=club) | Q(away_team=club))
+    else:
+        clubs = Club.objects.filter(status=True).all()
+        if request.GET.get('club'):
+            results = results.filter(Q(home_team=request.GET.get('club')) | Q(away_team=request.GET.get('club')))
 
     if fixture is True:
         page = 'fixtures'
-        results.filter(start_time__gte=now())
+        results = results.filter(start_time__gte=now())
     else:
         page = 'results'
-        results.filter(end_time__lte=now())
+        results = results.filter(end_time__lte=now())
 
-    return render(request, 'frontend/results.html', {
+    return {
         'seasons': seasons,
         'clubs': clubs,
         'page': page,
         'banners': banners,
         'results': results,
-    })
+    }
 
 
-def load_index(club=None):
+def load_index(request, club=None):
     page = 'clubs' if club is not None else 'index'
-    match_this_weeks = []
+    match_this_weeks = Match.objects.filter(start_time__gte=now())
     main_club_id = None
     block_1_posts = Post.objects.filter(status=True).filter(display_place='block_1')
     block_2_posts = Post.objects.filter(status=True).filter(display_place='block_2')
@@ -65,14 +69,14 @@ def load_index(club=None):
         galleries = galleries.filter(clubs__in=[club])
         socials = socials.filter(clubs__in=[club])
         main_club_id = club.id if hasattr(club, 'id') else None
-    else:
-        match_this_weeks = Match.objects.filter(start_time__gte=now()).order_by('-created_at')[:5]
+        match_this_weeks = match_this_weeks.filter(Q(home_team=club) | Q(away_team=club))
 
     block_1_posts = block_1_posts.order_by('-created_at')[:4]
     block_2_posts = block_2_posts.order_by('-created_at')[:4]
     galleries = galleries.order_by('-created_at')[:4]
     socials = socials.order_by('-created_at')[:4]
     sponsors = Sponsor.objects.all()[:5]
+    match_this_weeks = match_this_weeks.order_by('-created_at')[:5]
 
     return {
         'block_1_posts': block_1_posts,
@@ -88,8 +92,28 @@ def load_index(club=None):
     }
 
 
+def load_player(request, club=None):
+    page = 'players'
+    banners = Banner.objects.filter(status=True).filter(position__position_key='normal_page').all()
+    players = Player.objects.filter(status=True)
+    if club is not None:
+        players = players.filter(club__in=[club])
+        clubs = None
+    else:
+        clubs = Club.objects.filter(status=True).all()
+        if request.GET.get('club'):
+            players = players.filter(club=request.GET.get('club'))
+
+    return {
+        'banners': banners,
+        'players': players,
+        'page': page,
+        'clubs': clubs,
+    }
+
+
 def index(request):
-    return render(request, 'frontend/index.html', load_index())
+    return render(request, 'frontend/index.html', load_index(request))
 
 
 def news(request):
@@ -114,11 +138,11 @@ def news(request):
 
 
 def results(request):
-    return load_fixture_or_result(request)
+    return render(request, 'frontend/results.html', load_fixture_or_result(request))
 
 
 def fixtures(request):
-    return load_fixture_or_result(request, fixture=True)
+    return render(request, 'frontend/results.html', load_fixture_or_result(request, fixture=True))
 
 
 def tables(request):
@@ -219,19 +243,7 @@ def clubs(request):
 
 
 def players(request):
-    page = 'players'
-    banners = Banner.objects.filter(status=True).filter(position__position_key='normal_page').all()
-    clubs = Club.objects.filter(status=True).all()
-    players = Player.objects.filter(status=True)
-    if request.GET.get('club'):
-        players = players.filter(club=request.GET.get('club'))
-    return render(request, 'frontend/players.html', {
-        'banners': banners,
-        'players': players,
-        'page': page,
-
-        'clubs': clubs,
-    })
+    return render(request, 'frontend/players.html', load_player(request))
 
 
 def news_detail(request, slug):
@@ -247,7 +259,26 @@ def news_detail(request, slug):
 def clubs_detail(request, slug):
     club = Club.objects.filter(slug=slug).first()
     if club:
-        return render(request, 'frontend/clubs_detail.html', load_index(club))
+        section = 'all'
+        if request.GET.get('section'):
+            section = request.GET.get('section')
+
+        if section == 'all':
+            response = load_index(request, club)
+
+        elif section == 'players':
+            response = load_player(request, club)
+
+        elif section == 'fixtures':
+            response = load_fixture_or_result(request, fixture=True, club=club)
+        else:
+            response = load_fixture_or_result(request, fixture=False, club=club)
+
+        response['section'] = section
+        response['page'] = 'clubs'
+        response['club'] = club
+
+        return render(request, 'frontend/clubs_detail.html', response)
     else:
         return redirect('frontend:index')
 

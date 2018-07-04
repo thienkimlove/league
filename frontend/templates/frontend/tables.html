@@ -27,7 +27,7 @@
                                         <label> Filter by Season</label>
                                         <select name="season">
                                             {% for season in seasons %}
-                                                <option {% if request.GET.season == season.id %}selected{% endif %} value="{{ season.id }}">{{ season.name }}</option>
+                                                <option {% if request.GET.season == season.id|slugify %}selected{% endif %} value="{{ season.id }}">{{ season.name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>

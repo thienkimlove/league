@@ -21,12 +21,14 @@
                 </div>
 
                 <ul class="menu-news-v2 pull-left">
-                    <li> <a href="#" class="active"> All </a> </li>
-                    {% comment %}<li> <a href="#"> Fixtures  </a> </li>
-                    <li> <a href="#"> Taliking Tactics  </a> </li>
-                    <li> <a href="#"> Transfers </a> </li>
-                    <li> <a href="#"> Fixtures </a> </li>
-                    <li> <a href="#"> Yount </a> </li>{% endcomment %}
+                    <li> <a href="?section=all" class="{% if section == 'all' %}active{% endif %}"> All </a> </li>
+
+                    <li> <a href="?section=fixtures" class="{% if section == 'fixtures' %}active{% endif %}"> Fixtures </a> </li>
+
+                    <li> <a href="?section=results" class="{% if section == 'results' %}active{% endif %}"> Results </a> </li>
+
+                    <li> <a href="?section=players" class="{% if section == 'players' %}active{% endif %}"> Players </a> </li>
+
                 </ul>
             </div>
         </div>
@@ -35,8 +37,21 @@
         <div class="main-content">
             <div class="container">
                 <div class="row">
+                    {% if section == 'all' %}
                     <!-- start left column -->
-                    {% include "frontend/partials/main_index.html" %}
+                        {% include "frontend/partials/main_index.html" %}
+                    {% elif section == 'fixtures' %}
+                        {% include "frontend/partials/main_result.html" %}
+                    {% elif section == 'results' %}
+                        {% include "frontend/partials/main_result.html" %}
+
+                    {% elif section == 'players' %}
+                        {% include 'frontend/partials/main_player.html' %}
+                    {% else %}
+
+                    {% endif %}
+
+
 
                     {% right_content main_club_id %}
                 </div>
@@ -44,4 +59,22 @@
         </div>
     </section>
 
+{% endblock %}
+
+{% block frontend_script %}
+    {{ super }}
+    <script>
+        $(function(){
+            $('#result_filter_submit').click(function(){
+                $('#result_filter').submit()
+            });
+        });
+    </script>
+    <script>
+        $(function(){
+            $('#player_filter_submit').click(function(){
+                $('#player_filter').submit()
+            });
+        });
+    </script>
 {% endblock %}

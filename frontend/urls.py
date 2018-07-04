@@ -18,9 +18,9 @@ urlpatterns = [
     url(r'^galleries/(?P<slug>[\w-]+)\.html$', galleries_detail, name='galleries_detail'),
 
     url(r'^news$', news, name='news'),
-    url(r'^results', results, name='results'),
-    url(r'^fixtures', fixtures, name='fixtures'),
-    url(r'^tables', tables, name='tables'),
+    url(r'^results$', results, name='results'),
+    url(r'^fixtures$', fixtures, name='fixtures'),
+    url(r'^tables$', tables, name='tables'),
     url(r'^clubs$', clubs, name='clubs'),
     url(r'^players$', players, name='players'),
     url(r'^managers$', managers, name='managers'),

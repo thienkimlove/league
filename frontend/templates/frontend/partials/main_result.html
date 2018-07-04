@@ -1,0 +1,79 @@
+{% load staticfiles i18n thumbnail core_helper %}
+<div class="col-md-9 col-sm-12 col-xs-12">
+    <form method="get" id="result_filter">
+        <div class="block block-search-filter">
+            <div class="row">
+
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <label> Filter by Season</label>
+                    <select name="season">
+                        {% for season in seasons %}
+                            <option {% if request.GET.season == season.id|slugify %}selected{% endif %} value="{{ season.id }}">{{ season.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <label> Filter by Club</label>
+                    <select name="club">
+                        <option>All club</option>
+                        {% for club in clubs %}
+                            <option {% if request.GET.club == club.id|slugify %}selected{% endif %} value="{{ club.id }}">{{ club.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <button id="result_filter_submit" class="btn"> Reset Filters </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="news-list">
+        <!-- start block filter -->
+        <div class="filter-item">
+            <h3> Saturday 03 March</h3>
+            <table style="width: 100%" class="filter table-responsive">
+                {% for result in results %}
+                    <tr>
+                        <td class="club">
+                            <strong> {{ result.start_time|date }} </strong>
+                            {% thumbnail result.home_team.image "42x40" crop="center" as im %}
+                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ result.home_team.name }}">
+                            {% endthumbnail %}
+                        </td>
+
+                        <td> <span class="assist">{{ result.home_end_score }} - {{ result.away_end_score }}</span> </td>
+
+                        <td class="club">
+                            {% thumbnail result.away_team.image "42x40" crop="center" as im %}
+                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ result.away_team.name }}">
+                            {% endthumbnail %}
+
+                            <strong> {{ result.start_time|date }} </strong>
+                        </td>
+
+                        <td class="season">
+                            {% thumbnail result.stadium.image "32x19" crop="center" as im %}
+                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ result.stadium.name }}">
+                            {% endthumbnail %}
+                            {{ result.stadium.name }}
+                        </td>
+                        <td> <i class="fa fa-arrow-right"> </i> </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+
+    </div>
+
+    {% for banner_1 in banners %}
+        <!-- 2. start block banner  -->
+        <div class="block block-banner">
+            <a target="_blank" href="{{ banner_1.link }}"><img src="{{ banner_1.image.url }}" alt="" class=""></a>
+        </div>
+
+    {% endfor %}
+
+</div>
