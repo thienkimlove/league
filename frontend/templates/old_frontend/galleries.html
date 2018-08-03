@@ -1,0 +1,64 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail core_helper %}
+
+{% block content %}
+    <!-- start of breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <h3>  Media Gallery </h3>
+            <ul>
+                <li> <i class="fa fa-home"> </i> </li>
+                <li> <i class="fa fa-arrow-right"> </i> Media Gallery </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <!-- Main content homepage -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <!-- start left column -->
+                <div class="col-md-9 col-sm-12 col-xs-12">
+                    <div class="news-list">
+                        <!-- start item -->
+
+                        {% for gallery in list_galleries %}
+                            <div class="news-item style-v2">
+                            <div class="images">
+                                <a href="{% url 'frontend:galleries_detail' gallery.slug %}">
+                                    {% thumbnail gallery.image "313x209" crop="center" as im %}
+                                        <img class="responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ gallery.name }}">
+                                    {% endthumbnail %}
+                                </a>
+                            </div>
+                            <div class="new-content">
+                                <div class="news-name"> <a href="{% url 'frontend:galleries_detail' gallery.slug %}">{{ gallery.name }} </a></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+
+                        <!-- start button -->
+                        {% comment %}<div class="text-center">
+                            <button class="btn load-more"> <span> Loading more content...</span></button>
+                        </div>{% endcomment %}
+
+                    </div>
+
+
+                        {% for banner in banners %}
+                            <!-- 2. start block banner  -->
+                            <div class="block block-banner">
+                                <a target="_blank" href="{{ banner.link }}"><img src="{{ banner.image.url }}" alt="" class=""></a>
+                            </div>
+
+                        {% endfor %}
+
+                </div>
+
+                {% right_content %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,6 +1,5 @@
 {% load static core_helper thumbnail i18n %}
-<!-- start header -->
-<header>
+<header class="visible-lg visible-md">
     <div class="header-default">
         <div class="container">
             <div class="row no-margin">
@@ -9,7 +8,6 @@
                         <img src="{% static "frontend/images/logo.jpg" %}" alt="Lao Premier League" />
                     </div>
                 </div>
-
                 {% header_club_list as header_club_list %}
 
                 <div class="col-md-9 col-sm-9 col-xs-12 no-padding">
@@ -18,17 +16,15 @@
                             <div class="block club-team">
                                 <div class="block-title"> Clubs: </div>
                                 <div class="block-content">
-                                    <!-- Start clubs images carousel -->
-                                    <div class="owl-carousel owl-theme" id="clubs-carousel">
+                                    <div class="block-carousel">
                                         {% for header_club in header_club_list %}
-                                        <div class="item">
-                                            <a href="{% url 'frontend:clubs_detail' header_club.slug %}">
-
-                                                {% thumbnail header_club.image "53x50" crop="center" as im %}
-                                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ header_club.name }}">
-                                                {% endthumbnail %}
-                                            </a>
-                                        </div>
+                                            <div class="carousel-item">
+                                                <a href="{% url 'frontend:clubs_detail' header_club.slug %}">
+                                                    {% thumbnail header_club.image "42x40" crop="center" as im %}
+                                                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ header_club.name }}">
+                                                    {% endthumbnail %}
+                                                </a>
+                                            </div>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -48,7 +44,7 @@
                         <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
                             <ul class="nav nav-pills nav-links">
                                 {% for key, val in menu_items.items %}
-                                <li><a href="{% url "frontend:"|add:key %}" class="{% if page == key %}active{% endif %}">{{ val }}</a></li>
+                                    <li><a href="{% url "frontend:"|add:key %}" class="{% if page == key %}active{% endif %}">{{ val }}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -58,4 +54,16 @@
         </div>
     </div>
 </header>
-<!-- End of header -->
+
+<header class="visible-sm visible-xs">
+    <div class="header-default">
+        <div class="container">
+            <div class="row no-margin">
+                <div class="col-md-12 col-sm-12 col-xs-12 no-padding">
+                    <button type="button" class="prev"><i class="fa fa-bars"></i></button>
+                    <div class="logo"> <img src="{% static "frontend/images/logo.jpg" %}" class="img-responive" alt="Lao Premier League" /></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,63 @@
+{% load staticfiles i18n thumbnail core_helper %}
+<div class="col-md-9 col-sm-12 col-xs-12">
+    <form method="get" id="player_filter">
+        <div class="block block-search-filter">
+
+            <div class="row">
+
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <label> Filter by Club</label>
+                    <select name="club">
+                        <option>All club</option>
+                        {% for club in clubs %}
+                            <option {% if request.GET.club == club.id|slugify %}selected{% endif %} value="{{ club.id }}">{{ club.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <button id="player_filter_submit" class="btn"> Reset Filters</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <div class="manager-list">
+        <ul>
+            <li>
+                <div class="list-palyer">
+                    <span><strong>Player</strong></span>
+                    <span><strong>Club</strong></span>
+                    <span><strong>Nationality</strong></span>
+                </div>
+            </li>
+
+            {% for player in players %}
+
+                <li>
+                    <div class="list-palyer">
+                                      <span>
+                                          <span>
+                                              {% thumbnail player.image "40x40" crop="center" as im %}
+                                                  <img class="image-radius image-40" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ player.name }}">
+                                              {% endthumbnail %}
+
+                                          </span>
+                                          <span><strong>{{ player.name }}</strong> </span>
+                                      </span>
+                        <span>{{ player.club.name }}</span>
+                        <span>
+                                          <span>
+                                              {% thumbnail player.club.image "37x24" crop="center" as im %}
+                                                  <img class="image-radius image-40" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ player.club.name }}">
+                                              {% endthumbnail %}
+                                          </span>
+                                          <span>{{ player.nationality }} </span>
+                                      </span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

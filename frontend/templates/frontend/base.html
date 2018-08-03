@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,219 +15,33 @@
     <link rel="stylesheet" type="text/css" href="{% static "frontend/css/font-awesome.min.css" %}" media="all">
     <link href='//fonts.googleapis.com/css?family=Poppins:300,400,600,400i,700' rel='stylesheet' type='text/css'>
 
-
-    <!-- Owl Stylesheets -->
-    <link rel="stylesheet" href="{% static "frontend/js/owlcarousel/assets/owl.carousel.min.css" %}">
-    <link rel="stylesheet" href="{% static "frontend/js/owlcarousel/assets/owl.theme.default.min.css" %}">
-
-
     <!--[if lt IE 9]>
-        <script src="{% static "frontend/css/respond.min.js" %}"></script>
-        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-
+	<script src="{% static "frontend/css/respond.min.js" %}"></script>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
 </head>
 
 <body>
-
+<!-- start header -->
 {% include 'frontend/partials/header.html' %}
+<!-- End of header -->
 
 
+<!-- Start content homepage -->
 {% block content %}
 
 {% endblock %}
 
+<!-- start html footer -->
 {% include 'frontend/partials/footer.html' %}
-
-
-<div id="top">
-    <a href="#" class="scrollup"><i class="fa fa-angle-double-up"></i></a>
-</div>
-
-<script src="{% static "frontend/js/jquery.min.js" %}"> </script>
-
-<script src="{% static "frontend/js/bootstrap.min.js" %}"> </script>
-
+<script src="{% static "frontend/js/jquery.min.js" %}"></script>
 <script src="{% static "frontend/js/myscript.js" %}"></script>
-
-<script src="{% static "frontend/js/owlcarousel/owl.carousel.js" %}"></script>
-<script src="{% static "frontend/js/owl.rows.js" %}"></script>
+<script src="{% static "frontend/js/bootstrap.min.js" %}"> </script>
 
 <!-- vendors -->
 <script src="{% static "frontend/js/vendors/highlight.js" %}"></script>
 <script src="{% static "frontend/js/app.js" %}"></script>
 
-<script>
-    $(document).ready(function() {
-        var owl = $('#brands-carousel');
-        owl.owlCarousel({
-            margin: 10,
-            nav: true,
-            loop: true,
-            dots:false,
-            responsiveClass:true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 3
-                },
-                1000: {
-                    items: 5
-                }
-            }
-        })
-    })
-</script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        var owl = $('#clubs-carousel');
-        owl.owlCarousel({
-            margin: 10,
-            nav: true,
-            loop: true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items:4
-                },
-                1000: {
-                    items: 8,
-                    nav:false
-                }
-            }
-        })
-    })
-</script>
-
-<script>
-    $(document).ready(function() {
-        var owl = $('#matchweek-carousel');
-        owl.owlCarousel({
-            margin: 10,
-            nav: true,
-            loop: true,
-            dots:false,
-            responsiveClass:true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 2
-                },
-                991: {
-                    items: 3
-                },
-                1000: {
-                    items: 4,
-                }
-            }
-        })
-    })
-</script>
-
-<script>
-    $(document).ready(function() {
-        var owl = $('#news-carousel');
-        owl.owlCarousel({
-            margin: 0,
-            nav: true,
-            loop: true,
-            nav:false,
-            responsiveClass:true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items:1
-                },
-                1000: {
-                    items: 1
-                }
-            }
-        })
-    })
-</script>
-<script>
-    $(document).ready(function() {
-        var owl = $('#news02-carousel');
-        owl.owlCarousel({
-            margin: 20,
-            loop: true,
-            nav:false,
-            dots:false,
-            responsiveClass:true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 2
-                },
-                1000: {
-                    items: 3
-                }
-            }
-        })
-    })
-</script>
-<script>
-    $(document).ready(function() {
-        var owl = $('#news03-carousel');
-        owl.owlCarousel({
-            margin: 20,
-            loop: true,
-            nav:false,
-            rows: true,
-            rowsCount: 2,
-            responsiveClass:true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 2
-                },
-                1000: {
-                    items: 2
-                }
-            }
-        })
-    })
-</script>
-
-<script>
-    $(document).ready(function() {
-        var owl = $('#matchweek-carousel02');
-        owl.owlCarousel({
-            margin: 10,
-            nav: true,
-            loop: true,
-            dots:false,
-            responsiveClass:true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 2
-                },
-                991: {
-                    items: 3
-                },
-                1000: {
-                    items: 4,
-                }
-            }
-        })
-    })
-</script>
 {% block frontend_script %}
 
 {% endblock %}

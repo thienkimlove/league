@@ -20,6 +20,16 @@ class PostForm(autocomplete.FutureModelForm):
         labels = settings.LABELS
 
 
+class GalleryForm(autocomplete.FutureModelForm):
+    class Meta:
+        model = Gallery
+        fields = '__all__'
+        widgets = {
+            'content': CKEditorUploadingWidget(),
+        }
+        labels = settings.LABELS
+
+
 class PlayerForm(forms.ModelForm):
     class Meta:
         model = Player
@@ -35,7 +45,7 @@ class CoachForm(forms.ModelForm):
         model = Coach
         fields = '__all__'
         widgets = {
-            'dob': SelectDateWidget(years=[x for x in range(1979, 2005)]),
+            'dob': SelectDateWidget(years=[x for x in range(1930, 2005)]),
         }
         labels = settings.LABELS
 
@@ -45,7 +55,7 @@ class RefereeForm(forms.ModelForm):
         model = Referee
         fields = '__all__'
         widgets = {
-            'dob': SelectDateWidget(years=[x for x in range(1979, 2005)]),
+            'dob': SelectDateWidget(years=[x for x in range(1930, 2005)]),
         }
         labels = settings.LABELS
 

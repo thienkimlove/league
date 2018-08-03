@@ -71,7 +71,7 @@ def load_index(request, club=None):
         main_club_id = club.id if hasattr(club, 'id') else None
         match_this_weeks = match_this_weeks.filter(Q(home_team=club) | Q(away_team=club))
 
-    block_1_posts = block_1_posts.order_by('-created_at')[:4]
+    block_1_posts = block_1_posts.order_by('-created_at')[:1]
     block_2_posts = block_2_posts.order_by('-created_at')[:4]
     galleries = galleries.order_by('-created_at')[:4]
     socials = socials.order_by('-created_at')[:4]

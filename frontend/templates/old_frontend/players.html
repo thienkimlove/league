@@ -1,0 +1,44 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail core_helper %}
+
+{% block content %}
+
+    <!-- start of breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <h3> Players </h3>
+            <ul>
+                <li> <i class="fa fa-home"> </i> </li>
+                <li> <i class="fa fa-arrow-right"> </i> Players </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content homepage -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <!-- start left column -->
+                {% include 'frontend/partials/main_player.html' %}
+                <!-- start right column -->
+                {% right_content %}
+
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block frontend_script %}
+    {{ super }}
+    <script>
+        $(function(){
+            $('#player_filter_submit').click(function(){
+                $('#player_filter').submit()
+            });
+        });
+    </script>
+{% endblock %}

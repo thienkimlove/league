@@ -1,0 +1,46 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail core_helper %}
+
+{% block content %}
+
+
+    <!-- start of breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <h3> News </h3>
+            <ul>
+                <li> <i class="fa fa-home"> </i> </li>
+                <li> <i class="fa fa-arrow-right"> </i> News </li>
+                <li> <i class="fa fa-arrow-right"> </i> {{ post.name }} </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+
+                <!-- start left column -->
+                <div class="col-md-9 col-sm-12 col-xs-12">
+
+                <div>
+                    {{ post.content|safe|escape }}
+                </div>
+
+                    {% for banner in banners %}
+                        <!-- 2. start block banner  -->
+                        <div class="block block-banner">
+                            <a target="_blank" href="{{ banner.link }}"><img src="{{ banner.image.url }}" alt="" class=""></a>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+                {% right_content %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles core_helper i18n thumbnail %}
+
+{% block content %}
+
+    <section class="wrapper">
+        <div class="breadcrumbs style-v2">
+            <div class="container">
+
+                <div class="club-logo">
+                    <div class="image">
+                        {% thumbnail club.image "153x190" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ club.name }}">
+                        {% endthumbnail %}
+                    </div>
+                    <div class="content">
+                        <h2>{{ club.name }}</h2>
+                        <span> <img src="{% static 'frontend/images/icon-season.png' %}" alt="icon-season"/>{{ club.stadium.name }}</span>
+                        <span> <img src="{% static 'frontend/images/icon-home.png' %}" alt="icon home"/>Official Website: {{ club.website }}</span>
+                    </div>
+                </div>
+
+                <ul class="menu-news-v2 pull-left">
+                    <li> <a href="?section=all" class="{% if section == 'all' %}active{% endif %}"> All </a> </li>
+
+                    <li> <a href="?section=fixtures" class="{% if section == 'fixtures' %}active{% endif %}"> Fixtures </a> </li>
+
+                    <li> <a href="?section=results" class="{% if section == 'results' %}active{% endif %}"> Results </a> </li>
+
+                    <li> <a href="?section=players" class="{% if section == 'players' %}active{% endif %}"> Players </a> </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main content homepage -->
+        <div class="main-content">
+            <div class="container">
+                <div class="row">
+                    {% if section == 'all' %}
+                    <!-- start left column -->
+                        {% include "frontend/partials/main_index.html" %}
+                    {% elif section == 'fixtures' %}
+                        {% include "frontend/partials/main_result.html" %}
+                    {% elif section == 'results' %}
+                        {% include "frontend/partials/main_result.html" %}
+
+                    {% elif section == 'players' %}
+                        {% include 'frontend/partials/main_player.html' %}
+                    {% else %}
+
+                    {% endif %}
+
+
+
+                    {% right_content main_club_id %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block frontend_script %}
+    {{ super }}
+    <script>
+        $(function(){
+            $('#result_filter_submit').click(function(){
+                $('#result_filter').submit()
+            });
+        });
+    </script>
+    <script>
+        $(function(){
+            $('#player_filter_submit').click(function(){
+                $('#player_filter').submit()
+            });
+        });
+    </script>
+{% endblock %}

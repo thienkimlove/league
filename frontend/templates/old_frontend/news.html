@@ -1,0 +1,83 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail core_helper %}
+
+{% block content %}
+    <!-- start of breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <h3> News </h3>
+            <ul>
+                <li> <i class="fa fa-home"> </i> </li>
+                <li> <i class="fa fa-arrow-right"> </i> News </li>
+            </ul>
+
+            <ul class="menu-news pull-right">
+                {% if active_category is not None %}
+                    <li> <a href="{% url 'frontend:news' %}"> All </a> </li>
+                {% else %}
+                     <li> <a href="{% url 'frontend:news' %}" class="active"> All </a> </li>
+                {% endif %}
+
+                {% for category in categories %}
+                    {% if category.id == active_category.id %}
+                        <li> <a href="{% url 'frontend:news' %}?category={{ category.slug }}" class="active"> {{ category.name }} </a> </li>
+                    {% else %}
+                        <li> <a href="{% url 'frontend:news' %}?category={{ category.slug }}"> {{ category.name }} </a> </li>
+                    {% endif %}
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content homepage -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <!-- start left column -->
+                <div class="col-md-9 col-sm-12 col-xs-12">
+                    <div class="news-list">
+                        <!-- start item -->
+
+                        {% for post in posts %}
+                            <div class="news-item style-v2">
+                            <div class="images">
+                                <a href="{% url 'frontend:news_detail' post.slug %}">
+                                    {% thumbnail post.image "313x209" crop="center" as im %}
+                                        <img class="responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ post.name }}">
+                                    {% endthumbnail %}
+                                </a>
+                            </div>
+                            <div class="new-content">
+                                <div class="news-name"> <a href="{% url 'frontend:news_detail' post.slug %}">{{ post.name }} </a></div>
+                                <div class="news-des">
+                                    {{ post.desc }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+
+                        <!-- start button -->
+                        {% comment %}<div class="text-center">
+                            <button class="btn load-more"> <span> Loading more content...</span></button>
+                        </div>{% endcomment %}
+
+                    </div>
+
+
+                        {% for banner in banners %}
+                            <!-- 2. start block banner  -->
+                            <div class="block block-banner">
+                                <a target="_blank" href="{{ banner.link }}"><img src="{{ banner.image.url }}" alt="" class=""></a>
+                            </div>
+
+                        {% endfor %}
+
+                </div>
+
+                {% right_content %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

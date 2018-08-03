@@ -1,0 +1,64 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail core_helper %}
+
+{% block content %}
+    <!-- Start content homepage -->
+    <section class="wrapper">
+        <div class="row-matchweek">
+            <div class="container">
+                <div class="block block-matchweek">
+                    <div class="block-title"><span>Fixtures</span></div>
+                    <div class="block-content">
+                        <!-- Start matchweek-carousel -->
+                        <div class="owl-carousel owl-theme" id="matchweek-carousel">
+                            {% for match_this_week in match_this_weeks %}
+                                <div class="item">
+                                <div class="matchweek-item">
+                                    <div class="matchweek-content">
+                                        <span class="time">{{ match_this_week.start_time|date:'D d M' }}</span>
+                                        <span class="match-detail">
+                                             <span class="team">
+                                                 {% thumbnail match_this_week.home_team.image "42x40" crop="center" as im %}
+                                                     <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ match_this_week.home_team.name }}">
+                                                 {% endthumbnail %}
+
+                                                 <span class="team-name"> {{ match_this_week.home_team.name }} </span>
+                                           </span>
+                                           <span class="result-match"> {{ match_this_week.home_end_score }} - {{ match_this_week.away_end_score }} </span>
+                                           <span class="team">
+                                                  {% thumbnail match_this_week.away_team.image "42x40" crop="center" as im %}
+                                                      <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ match_this_week.away_team.name }}">
+                                                  {% endthumbnail %}
+                                                 <span class="team-name"> {{ match_this_week.away_team.name }} </span>
+                                           </span>
+                                     </span>
+                                    </div>
+                                    <div class="matchweek-link">
+                                        <a href="{% url 'frontend:fixtures' %}"> Start </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Main content homepage -->
+        <div class="main-content-homepage">
+            <div class="container">
+                <div class="row">
+                    <!-- start left column -->
+                    {% include "frontend/partials/main_index.html" %}
+
+                    <!-- start right column -->
+
+                    {% right_content %}
+
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

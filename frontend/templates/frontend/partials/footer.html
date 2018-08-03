@@ -1,32 +1,28 @@
 {% load static thumbnail core_helper i18n %}
-<!-- start html footer -->
 <section class="footer">
     <div class="footer-top">
         <div class="container">
             <div class="row">
                 <div class="col-md-2 col-sm-12 col-xs-12">
                     <div class="logo-footer">
-                        <img src="{% static "frontend/images/club01.png" %}" alt="Lao Premier League" />
+                        <img src="{% static "frontend/images/logo-small.png" %}" alt="Lao Premier League" />
                     </div>
                 </div>
-
-            {%  sponsor_list as sponsors %}
-
+                {%  sponsor_list as sponsors %}
                 <div class="col-md-10 col-sm-12 col-xs-12">
                     <div class="block brand-list">
                         <div class="block-title">Official <strong>Sponsors</strong> </div>
                         <div class="block-content">
                             <!-- Start brands images carousel -->
-                            <div class="owl-carousel owl-theme" id="brands-carousel">
-
+                            <div class="block-carousel">
                                 {% for sponsor in sponsors %}
-
-                                <div class="item">
-
-                                    {% thumbnail sponsor.image "147x80" crop="center" as im %}
-                                        <img class="brands-image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ sponsor.name }}">
-                                    {% endthumbnail %}
-                                </div>
+                                    <div class="carousel-item">
+                                        <a target="_blank" href="{{ sponsor.link }}">
+                                            {% thumbnail sponsor.image "124x68" crop="center" as im %}
+                                                <img class="brands-image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ sponsor.name }}">
+                                            {% endthumbnail %}
+                                        </a>
+                                    </div>
 
                                 {%  endfor %}
 
@@ -62,10 +58,7 @@
                         </div>
                     </div>
                 </div>
-
-
                 {% load_menu_items as menu_items %}
-
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <div class="block block-link">
                         <div class="block-title"> League</div>
@@ -122,3 +115,7 @@
         </div>
     </div>
 </section>
+
+<div id="top">
+    <a href="#" class="scrollup"><i class="fa fa-angle-double-up"></i></a>
+</div>

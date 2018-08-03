@@ -336,6 +336,7 @@ class Banner(TimeStampedModel):
 class Gallery(TimeStampedModel):
     name = GeneralCharField(null=True, default=None)
     slug = GeneralSlug()
+    content = models.TextField(blank=True, null=True)
     status = models.BooleanField(default=True)
     image = models.ImageField(blank=True, null=True)
     clubs = models.ManyToManyField(Club)

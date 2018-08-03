@@ -1,0 +1,99 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail core_helper %}
+
+{% block content %}
+    <!-- start of breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <h3> Clubs </h3>
+            <ul>
+                <li> <i class="fa fa-home"> </i> </li>
+                <li> <i class="fa fa-arrow-right"> </i> Clubs </li>
+            </ul>
+
+        </div>
+    </div>
+
+    <!-- Main content homepage -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <!-- start left column -->
+                <div class="col-md-9 col-sm-12 col-xs-12">
+                    <form id="club_filter">
+                        <div class="block block-search-filter">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-8 col-xs-12">
+                                    <label> Filter by Season</label>
+                                    <select name="season">
+                                        {% for season in seasons %}
+                                            <option {% if request.GET.season == season.id|slugify %}selected{% endif %} value="{{ season.id }}">{{ season.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    <button id="club_filter_submit" class="btn"> Reset Filters </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="list-season">
+
+                        {% for club in list_clubs %}
+                           <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="season-item">
+                                <div class="content blue">
+                                    <div class="name"><a href="{% url 'frontend:clubs_detail' club.slug %}">{{ club.name }}</a></div>
+                                    <div class="season"> <img src="{% static 'frontend/images/icon-season.png' %}" alt="icon" />  {{ club.stadium.name }}</div>
+                                    <div class="link-club">
+                                        Club Profile
+                                        <i class="fa fa-arrow-right"> </i>
+                                    </div>
+                                    <div class="club-logo image-radius">
+                                        <a href="{% url 'frontend:clubs_detail' club.slug %}">
+                                        {% thumbnail club.image "42x40" crop="center" as im %}
+                                            <img class="responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ club.name }}">
+                                        {% endthumbnail %}
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="image">
+                                    <img src="{% static 'frontend/images/season-image.jpg' %}" alt="club01" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+
+
+                    </div>
+
+                </div>
+
+                {% right_content %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block frontend_script %}
+    {{ super }}
+    <script>
+       $(function(){
+           var divs = $(".list-season > div");
+           for(let i = 0; i < divs.length; i+=4) {
+               divs.slice(i, i+4).wrapAll("<div class='row'></div>");
+           }
+       })
+    </script>
+    <script>
+        $(function(){
+            $('#club_filter_submit').click(function(){
+                $('#club_filter').submit()
+            });
+        });
+    </script>
+{% endblock %}

@@ -36,12 +36,13 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_menu',
     'dal',
     'dal_select2',
     'filebrowser',
     'django.contrib.admindocs',
-    'admin_interface',
-    'colorfield',
+    #'admin_interface',
+    #'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
