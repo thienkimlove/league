@@ -144,7 +144,7 @@
                             <button type="button" class="icon-play"><i class="fa fa-play-circle"></i></button>
                         </div>
                         <div class="new-content">
-                            <div class="news-name">{{ first_galleries.name }}</div>
+                            <div class="news-name"><a href="{% url 'frontend:galleries_detail' first_galleries.slug %}">{{ first_galleries.name }}</a></div>
                             <div class="time"> <i class="fa fa-clock-o"> </i>{{ first_galleries.created_at }} </div>
                         </div>
                     </div>
@@ -164,7 +164,7 @@
                                         <button type="button" class="icon-play"><i class="fa fa-play-circle"></i></button>
                                     </div>
                                     <div class="new-content">
-                                        <div class="news-name"> {{ gallery.name }}</div>
+                                        <div class="news-name"> <a href="{% url 'frontend:galleries_detail' gallery.slug %}">{{ gallery.name }}</a></div>
                                     </div>
                                 </div>
                             </div>

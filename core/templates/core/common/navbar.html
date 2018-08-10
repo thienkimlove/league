@@ -1,0 +1,23 @@
+{% load static i18n core_helper %}
+<div class="navbar-custom">
+    <div class="container">
+        <div id="navigation">
+            <!-- Navigation Menu-->
+            <ul class="navigation-menu">
+                <li class="has-submenu">
+                    <a href="{% url 'core:backend_index' %}"><i class="md md-dashboard"></i>Trang chủ</a>
+                </li>
+
+                <li class="has-submenu">
+                    <a href="#"><i class="md md-dashboard"></i>Nội dung</a>
+                    <ul class="submenu">
+                        <li> <a href="{% url 'core:stadium_list' %}">Stadium</a></li>
+                        <li> <a href="{% url 'core:season_list' %}">Season</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+            <!-- End navigation menu        -->
+        </div>
+    </div> <!-- end container -->
+</div> <!-- end navbar-custom -->

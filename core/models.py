@@ -267,6 +267,7 @@ class Match(TimeStampedModel):
 
 class MatchAction(TimeStampedModel):
     name = GeneralCharField(null=True, default=None, unique=True)
+    image = models.ImageField(blank=True, null=True)
 
 
 class MatchDetail(TimeStampedModel):
@@ -275,7 +276,7 @@ class MatchDetail(TimeStampedModel):
     is_score = models.BooleanField(default=False)
     is_penalty = models.BooleanField(default=False)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, default=None)
-    time = models.DateTimeField(null=True, default=None, blank=True)
+    minute = models.SmallIntegerField(null=True, blank=True)
 
 
 class Category(TimeStampedModel):

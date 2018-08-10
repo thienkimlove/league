@@ -63,6 +63,9 @@ INSTALLED_APPS = [
     'django_extensions',
     'django_countries',
     'smart_selects',
+    'bootstrap4',
+    'django_datatables_view',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -291,3 +294,8 @@ LABELS = {
 TAGGIT_CASE_INSENSITIVE = True
 
 USE_DJANGO_JQUERY = True
+
+
+APP_NAME = 'Super System'
+USE_REMEMBER_ME = True
+LOGIN_REDIRECT_URL = 'backend/index'

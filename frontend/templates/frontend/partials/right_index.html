@@ -27,7 +27,7 @@
                                         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_league_item.name }}">
                                     {% endthumbnail %} <br/>
 
-                                    {{ right_league_item.name }}
+                                    <a href="{% url 'frontend:clubs_detail' right_league_item.slug  %}">{{ right_league_item.name }}</a>
                                 </span>
 
                                 <span class="mp">{{ right_league_item.mp }}</span>

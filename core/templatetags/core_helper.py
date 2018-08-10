@@ -11,10 +11,17 @@ from django import template
 from django.utils.timezone import *
 
 from core.models import *
+from project import settings
 
 _logger = logging.getLogger()
 register = template.Library()
 numeric_test = re.compile("^\d+$")
+
+
+# settings value
+@register.simple_tag
+def settings_value(name):
+    return getattr(settings, name, "")
 
 
 @register.filter

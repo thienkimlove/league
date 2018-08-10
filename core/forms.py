@@ -2,9 +2,11 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from dal import autocomplete
 
 from django import forms
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.forms import SelectDateWidget
-
+from django.forms import SelectDateWidget, ModelForm
+from django.utils.translation import gettext_lazy as _
 from core.models import *
 from project import settings
 
@@ -87,3 +89,64 @@ class MatchDetailForm(forms.ModelForm):
             self.fields['player'].queryset = Player.objects.filter(q)
         else:
             self.fields['player'].queryset = Player.objects.filter(status=True)
+
+
+class UserCacheMixin:
+    user_cache = None
+
+
+class SignIn(UserCacheMixin, forms.Form):
+    password = forms.CharField(label=_('Password'), strip=False, widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if settings.USE_REMEMBER_ME:
+            self.fields['remember_me'] = forms.BooleanField(label=_('Remember me'), required=False)
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+
+        if not self.user_cache:
+            return password
+
+        if not self.user_cache.check_password(password):
+            raise ValidationError(_('You entered an invalid password.'))
+
+        return password
+
+
+class SignInViaUsernameForm(SignIn):
+    username = forms.CharField(label=_('Username'))
+
+    @property
+    def field_order(self):
+        if settings.USE_REMEMBER_ME:
+            return ['username', 'password', 'remember_me']
+        return ['username', 'password']
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+
+        user = User.objects.filter(username=username).first()
+        if not user:
+            raise ValidationError(_('You entered an invalid username.'))
+
+        if not user.is_active:
+            raise ValidationError(_('This account is not active.'))
+
+        self.user_cache = user
+
+        return username
+
+
+class StadiumForm(ModelForm):
+    class Meta:
+        model = Stadium
+        fields = ('name', 'capable', 'image', 'status')
+
+
+class SeasonForm(ModelForm):
+    class Meta:
+        model = Season
+        fields = ('name', 'start_date', 'end_date', 'status')
