@@ -158,3 +158,13 @@ def get_next_match_club(value):
     if next_match:
         return next_match.home_team if next_match.home_team.id != value else next_match.away_team
     return
+
+
+@register.simple_tag
+def get_clubs():
+    return Club.objects.filter(status=True)
+
+
+@register.simple_tag
+def get_players():
+    return Player.objects.filter(status=True)

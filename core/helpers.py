@@ -1,4 +1,5 @@
 from django.apps import apps
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.text import capfirst
@@ -10,7 +11,8 @@ def get_class_by_name(name):
 
 
 def get_model_by_name(name):
-    return apps.get_model('core', capfirst(name))
+    name = ''.join(capfirst(x) for x in name.split('_'))
+    return apps.get_model('core', name)
 
 
 def list_content(request, key):
@@ -52,6 +54,12 @@ def create_content(request, key):
     return render(request, 'core/%s/edit.html' % key, {'form': form})
 
 
+def delete_content(request, key, item_id):
+    model = get_model_by_name(key)
+    model.objects.get(pk=item_id).delete()
+    return JsonResponse({'status': 'ok'})
+
+
 def filter_normal(qs, request):
     # simple example:
     search_name = request.GET.get(u'name', None)
@@ -62,5 +70,32 @@ def filter_normal(qs, request):
     if filter_status:
         filter_status = True if filter_status == '1' else False
         qs = qs.filter(status=filter_status)
+
+    return qs
+
+
+def filter_player(qs, request):
+    # simple example:
+    qs = filter_normal(qs, request)
+
+    filter_club = request.GET.get('club', None)
+    if filter_club:
+        filter_club = int(filter_club)
+        qs = qs.filter(club=filter_club)
+
+    return qs
+
+
+def filter_player_history(qs, request):
+    # simple example:
+
+    filter_club = request.GET.get('club', None)
+    if filter_club:
+        filter_club = int(filter_club)
+        qs = qs.filter(club=filter_club)
+    filter_player = request.GET.get('player', None)
+    if filter_player:
+        filter_player = int(filter_player)
+        qs = qs.filter(player=filter_player)
 
     return qs

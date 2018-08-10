@@ -75,9 +75,11 @@
 <script src="{% static "core/ubold/assets/js/jquery.app.js" %}"></script>
 
 <script type="text/javascript">
-    $.ajaxSetup({
-        headers: { 'X-CSRF-Token' : $('meta[name=csrf_token]').attr('content') }
-    });
+   $(function () {
+       $.ajaxSetup({
+           headers: { 'X-CSRF-Token' : '{{ csrf_token }}' }
+       });
+   })
 </script>
 {% block inline_scripts %}{% endblock %}
 </body>

@@ -30,10 +30,7 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
-            <div class="btn-group pull-right m-t-15">
-                <a href="{% url 'core:stadium_create' %}"><button type="button" class="btn btn-default dropdown-toggle waves-effect" >Tạo mới <span class="m-l-5"><i class="fa fa-plus"></i></span></button></a>
-            </div>
-            <h4 class="page-title">Stadiums</h4>
+            <h4 class="page-title">Player Histories</h4>
         </div>
     </div>
 
@@ -45,20 +42,28 @@
                         <form class="form-inline" role="form" id="search-form">
                             {% csrf_token %}
 
+                            {% get_clubs as clubs %}
                             <div class="form-group m-l-10">
-                                <label class="sr-only" for="">Stadium Name</label>
-                                <input type="text" class="form-control" placeholder="Tên Stadium" name="name"/>
-                            </div>
-
-
-
-                            <div class="form-group m-l-10">
-                                <label class="sr-only" for="">Status</label>
-                                <select name="status" class="form-control select2">
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
+                                <label class="sr-only" for="">Clubs</label>
+                                <select name="club" class="form-control select2">
+                                    <option value="">Choose Club</option>
+                                    {% for club in clubs %}
+                                        <option value="{{ club.id }}">{{ club.name }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
+
+                            {% get_players as players %}
+                            <div class="form-group m-l-10">
+                                <label class="sr-only" for="">Players</label>
+                                <select name="player" class="form-control select2">
+                                    <option value="">Choose Player</option>
+                                    {% for player in players %}
+                                        <option value="{{ player.id }}">{{ player.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
                         </form>
 
                     </div>
@@ -74,11 +79,9 @@
                     <table id="dataTables" class="table table-striped table-bordered table-actions-bar">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Capable</th>
-                                <th>Image</th>
-                                <th>Status</th>
-                                <th>Update At</th>
+                                <th>Club</th>
+                                <th>Player</th>
+                                <th>Date Joined</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -126,18 +129,16 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{% url 'core:stadium_data_table' %}',
+                    url: '{% url 'core:player_history_data_table' %}',
                     data: function (d) {
-                        d.name = $('input[name=name]').val();
-                        d.status = $('select[name=status]').val();
+                        d.club = $('select[name=club]').val();
+                        d.player = $('select[name=player]').val();
                     }
                 },
                 columns: [
-                    {data: 'name', name: 'name', orderable: true},
-                    {data: 'capable', name: 'capable', orderable: true},
-                    {data: 'image', name: 'image', orderable: false},
-                    {data: 'status', name: 'status', orderable: false},
-                    {data: 'updated_at', name: 'updated_at', orderable: false},
+                    {data: 'club', name: 'club', orderable: false},
+                    {data: 'player', name: 'player', orderable: false},
+                    {data: 'date', name: 'date', orderable: false},
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[1, 'desc']]
@@ -151,7 +152,7 @@
             dataTable.on('click', '[id^="btn-delete-"]', function (e) {
                 e.preventDefault();
 
-                var url = $(this).data('url');
+                let url = $(this).data('url');
 
                 swal({
                     title: "Bạn có muốn xóa?",
@@ -163,7 +164,7 @@
                 }).then(function () {
                     $.ajax({
                         url : url,
-                        type : 'GET'
+                        type : 'GET',
                     }).always(function (data) {
                         dataTable.draw();
                     });

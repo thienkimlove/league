@@ -108,11 +108,7 @@ class StadiumListJson(ListJson):
         # queryset is already paginated here
         json_data = []
         for item in qs:
-            action = '<a class="table-action-btn" ' \
-                     'title="Chỉnh sửa Stadium" ' \
-                     'href="' + reverse('core:stadium_edit', kwargs={'item_id': item.id}) + '">' \
-                     '<i class="fa fa-pencil text-success"></i>' \
-                     '</a> '
+            action = '<a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:stadium_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:stadium_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
 
             json_data.append({
                 "name": item.name,
@@ -143,11 +139,7 @@ class SeasonListJson(ListJson):
         # queryset is already paginated here
         json_data = []
         for item in qs:
-            action = '<a class="table-action-btn" ' \
-                     'title="Chỉnh sửa Season" ' \
-                     'href="' + reverse('core:season_edit', kwargs={'item_id': item.id}) + '">' \
-                     '<i class="fa fa-pencil text-success"></i>' \
-                     '</a> '
+            action = '<a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:season_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:season_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
 
             json_data.append({
                 "name": item.name,
@@ -155,6 +147,198 @@ class SeasonListJson(ListJson):
                 "end_date": item.end_date.strftime('%Y-%m-%d') if item.end_date else '',
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
+                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "action": mark_safe(action)
+            })
+        return json_data
+
+
+class PositionListJson(ListJson):
+    model = Position
+
+    # define the columns that will be returned
+    order_columns = [
+        'name',
+        'updated_at',
+    ]
+
+    def filter_queryset(self, qs):
+        return filter_normal(qs, self.request)
+
+    def prepare_results(self, qs):
+        # prepare list with output column data
+        # queryset is already paginated here
+        json_data = []
+        for item in qs:
+            action = '<a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:position_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:position_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
+
+            json_data.append({
+                "name": item.name,
+                "status": '<i class="ion ion-checkmark-circled text-success"></i>'
+                if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
+                "is_goal_keeper": "Yes" if item.is_goal_keeper else "No",
+                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "action": mark_safe(action)
+            })
+        return json_data
+
+
+class LeagueListJson(ListJson):
+    model = League
+
+    # define the columns that will be returned
+    order_columns = [
+        'name',
+        'updated_at',
+    ]
+
+    def filter_queryset(self, qs):
+        return filter_normal(qs, self.request)
+
+    def prepare_results(self, qs):
+        # prepare list with output column data
+        # queryset is already paginated here
+        json_data = []
+        for item in qs:
+            action = '<a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:league_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:league_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
+
+            json_data.append({
+                "name": item.name,
+                "status": '<i class="ion ion-checkmark-circled text-success"></i>'
+                if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
+                "season": item.season.name if item.season else '',
+                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "action": mark_safe(action)
+            })
+        return json_data
+
+
+class ClubListJson(ListJson):
+    model = Club
+
+    # define the columns that will be returned
+    order_columns = [
+        'name',
+        'updated_at',
+    ]
+
+    def filter_queryset(self, qs):
+        return filter_normal(qs, self.request)
+
+    def prepare_results(self, qs):
+        # prepare list with output column data
+        # queryset is already paginated here
+        json_data = []
+        for item in qs:
+            action = '<a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:club_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:club_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
+
+            json_data.append({
+                "name": item.name,
+                "status": '<i class="ion ion-checkmark-circled text-success"></i>'
+                if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
+                "website": item.website,
+                "stadium": item.stadium.name if item.stadium else '',
+                "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
+                "background_img": '<img width="100" height="auto" src="'+item.background_img.url+'" />' if item.background_img else '',
+                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "action": mark_safe(action)
+            })
+        return json_data
+
+
+class PlayerListJson(ListJson):
+    model = Player
+
+    # define the columns that will be returned
+    order_columns = [
+        'name',
+        'updated_at',
+    ]
+
+    def filter_queryset(self, qs):
+        return filter_player(qs, self.request)
+
+    def prepare_results(self, qs):
+        # prepare list with output column data
+        # queryset is already paginated here
+        json_data = []
+        for item in qs:
+            action = '<a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:player_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:player_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
+
+            json_data.append({
+                "name": item.name,
+                "weight": item.weight,
+                "height": item.height,
+                "nationality": item.nationality.name,
+                "dob": item.dob,
+                "position": item.position.name if item.position else '',
+                "status": '<i class="ion ion-checkmark-circled text-success"></i>'
+                if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
+                "club": item.club.name if item.club else '',
+                "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
+                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "action": mark_safe(action)
+            })
+        return json_data
+
+
+class PlayerHistoryListJson(ListJson):
+    model = PlayerHistory
+
+    order_columns = [
+        'club',
+        'player',
+        'date',
+        'action',
+    ]
+
+    def filter_queryset(self, qs):
+        return filter_player_history(qs, self.request)
+
+    def prepare_results(self, qs):
+        # prepare list with output column data
+        # queryset is already paginated here
+        json_data = []
+        for item in qs:
+            action = '<a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:player_history_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
+
+            json_data.append({
+                "player": item.player.name if item.player else '',
+                "club": item.club.name if item.club else '',
+                "date": item.date.strftime('%Y-%m-%d'),
+                "action": mark_safe(action),
+            })
+        return json_data
+
+
+class RefereeListJson(ListJson):
+    model = Referee
+
+    # define the columns that will be returned
+    order_columns = [
+        'name',
+        'updated_at',
+    ]
+
+    def filter_queryset(self, qs):
+        return filter_normal(qs, self.request)
+
+    def prepare_results(self, qs):
+        # prepare list with output column data
+        # queryset is already paginated here
+        json_data = []
+        for item in qs:
+            action = '<a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:referee_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:referee_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
+
+            json_data.append({
+                "name": item.name,
+                "weight": item.weight,
+                "height": item.height,
+                "nationality": item.nationality.name,
+                "dob": item.dob,
+                "status": '<i class="ion ion-checkmark-circled text-success"></i>'
+                if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
+                "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
                 "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
                 "action": mark_safe(action)
             })

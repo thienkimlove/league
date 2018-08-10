@@ -160,6 +160,7 @@ class Club(TimeStampedModel):
     slug = GeneralSlug()
     image = models.ImageField(null=True, default=None, blank=True)
     stadium = models.ForeignKey(Stadium, on_delete=models.CASCADE, blank=True, null=True, default=None)
+    background_img = models.ImageField(null=True, default=None, blank=True)
     status = models.BooleanField(default=True)
 
     class Meta:

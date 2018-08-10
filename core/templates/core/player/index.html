@@ -31,9 +31,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="btn-group pull-right m-t-15">
-                <a href="{% url 'core:stadium_create' %}"><button type="button" class="btn btn-default dropdown-toggle waves-effect" >Tạo mới <span class="m-l-5"><i class="fa fa-plus"></i></span></button></a>
+                <a href="{% url 'core:player_create' %}"><button type="button" class="btn btn-default dropdown-toggle waves-effect" >Tạo mới <span class="m-l-5"><i class="fa fa-plus"></i></span></button></a>
             </div>
-            <h4 class="page-title">Stadiums</h4>
+            <h4 class="page-title">Players</h4>
         </div>
     </div>
 
@@ -46,8 +46,19 @@
                             {% csrf_token %}
 
                             <div class="form-group m-l-10">
-                                <label class="sr-only" for="">Stadium Name</label>
-                                <input type="text" class="form-control" placeholder="Tên Stadium" name="name"/>
+                                <label class="sr-only" for="">Search By Name</label>
+                                <input type="text" class="form-control" placeholder="Tên" name="name"/>
+                            </div>
+
+                            {% get_clubs as clubs %}
+                            <div class="form-group m-l-10">
+                                <label class="sr-only" for="">Clubs</label>
+                                <select name="club" class="form-control select2">
+                                    <option value="">Choose Club</option>
+                                    {% for club in clubs %}
+                                        <option value="{{ club.id }}">{{ club.name }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
 
 
@@ -75,7 +86,12 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Capable</th>
+                                <th>Club</th>
+                                <th>Weight</th>
+                                <th>Height</th>
+                                <th>DOB</th>
+                                <th>Nationality</th>
+                                <th>Position</th>
                                 <th>Image</th>
                                 <th>Status</th>
                                 <th>Update At</th>
@@ -126,15 +142,21 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{% url 'core:stadium_data_table' %}',
+                    url: '{% url 'core:player_data_table' %}',
                     data: function (d) {
                         d.name = $('input[name=name]').val();
                         d.status = $('select[name=status]').val();
+                        d.club = $('select[name=club]').val();
                     }
                 },
                 columns: [
                     {data: 'name', name: 'name', orderable: true},
-                    {data: 'capable', name: 'capable', orderable: true},
+                    {data: 'club', name: 'club', orderable: false},
+                    {data: 'weight', name: 'weight', orderable: false},
+                    {data: 'height', name: 'height', orderable: false},
+                    {data: 'dob', name: 'dob', orderable: false},
+                    {data: 'nationality', name: 'nationality', orderable: false},
+                    {data: 'position', name: 'position', orderable: false},
                     {data: 'image', name: 'image', orderable: false},
                     {data: 'status', name: 'status', orderable: false},
                     {data: 'updated_at', name: 'updated_at', orderable: false},
@@ -151,7 +173,7 @@
             dataTable.on('click', '[id^="btn-delete-"]', function (e) {
                 e.preventDefault();
 
-                var url = $(this).data('url');
+                let url = $(this).data('url');
 
                 swal({
                     title: "Bạn có muốn xóa?",
@@ -163,7 +185,7 @@
                 }).then(function () {
                     $.ajax({
                         url : url,
-                        type : 'GET'
+                        type : 'GET',
                     }).always(function (data) {
                         dataTable.draw();
                     });

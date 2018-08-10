@@ -150,3 +150,21 @@ class SeasonForm(ModelForm):
     class Meta:
         model = Season
         fields = ('name', 'start_date', 'end_date', 'status')
+
+
+class PositionForm(ModelForm):
+    class Meta:
+        model = Position
+        fields = ('name', 'is_goal_keeper', 'status')
+
+
+class LeagueForm(ModelForm):
+    class Meta:
+        model = League
+        fields = ('name', 'season', 'status')
+
+
+class ClubForm(ModelForm):
+    class Meta:
+        model = Club
+        fields = ('name', 'stadium', 'status', 'image', 'background_img', 'website')

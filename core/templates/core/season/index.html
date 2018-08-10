@@ -147,6 +147,28 @@
                 e.preventDefault();
                 dataTable.draw();
             });
+
+            dataTable.on('click', '[id^="btn-delete-"]', function (e) {
+                e.preventDefault();
+
+                let url = $(this).data('url');
+
+                swal({
+                    title: "Bạn có muốn xóa?",
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Accept!"
+                }).then(function () {
+                    $.ajax({
+                        url : url,
+                        type : 'GET',
+                    }).always(function (data) {
+                        dataTable.draw();
+                    });
+                });
+            });
         });
     </script>
 {% endblock %}
