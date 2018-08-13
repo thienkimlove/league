@@ -19,7 +19,14 @@ def player_by_club_json(request):
 def backend_index(request):
     if not request.user.is_authenticated:
         return redirect(reverse_lazy('core:login'))
-    return render(request, 'core/index.html', {})
+
+
+    return render(request, 'core/index.html', {
+        'match_number': Match.objects.count(),
+        'player_number': Player.objects.count(),
+        'club_number': Club.objects.count(),
+        'user_number': User.objects.count(),
+    })
 
 
 def log_out(request):
@@ -145,3 +152,187 @@ def create_referee(request):
 
 def delete_referee(request, item_id):
     return delete_content(request, 'referee', item_id)
+
+
+def list_coach(request):
+    return list_content(request, 'coach')
+
+
+def edit_coach(request, item_id):
+    return edit_content(request, 'coach', item_id)
+
+
+def create_coach(request):
+    return create_content(request, 'coach')
+
+
+def delete_coach(request, item_id):
+    return delete_content(request, 'coach', item_id)
+
+
+def list_coach_history(request):
+    return list_content(request, 'coach_history')
+
+
+def delete_coach_history(request, item_id):
+    return delete_content(request, 'coach_history', item_id)
+
+
+def list_match(request):
+    return list_content(request, 'match')
+
+
+def edit_match(request, item_id):
+    return edit_content(request, 'match', item_id)
+
+
+def create_match(request):
+    return create_content(request, 'match')
+
+
+def delete_match(request, item_id):
+    return delete_content(request, 'match', item_id)
+
+
+def list_match_detail(request):
+    return list_content(request, 'match_detail')
+
+
+def edit_match_detail(request, item_id):
+    return edit_content(request, 'match_detail', item_id)
+
+
+def create_match_detail(request):
+    return create_content(request, 'match_detail')
+
+
+def delete_match_detail(request, item_id):
+    return delete_content(request, 'match_detail', item_id)
+
+
+def list_match_action(request):
+    return list_content(request, 'match_action')
+
+
+def edit_match_action(request, item_id):
+    return edit_content(request, 'match_action', item_id)
+
+
+def create_match_action(request):
+    return create_content(request, 'match_action')
+
+
+def delete_match_action(request, item_id):
+    return delete_content(request, 'match_action', item_id)
+
+
+def list_category(request):
+    return list_content(request, 'category')
+
+
+def edit_category(request, item_id):
+    return edit_content(request, 'category', item_id)
+
+
+def create_category(request):
+    return create_content(request, 'category')
+
+
+def delete_category(request, item_id):
+    return delete_content(request, 'category', item_id)
+
+
+def list_post(request):
+    return list_content(request, 'post')
+
+
+def edit_post(request, item_id):
+    return edit_content(request, 'post', item_id)
+
+
+def create_post(request):
+    return create_content(request, 'post')
+
+
+def delete_post(request, item_id):
+    return delete_content(request, 'post', item_id)
+
+
+def list_banner(request):
+    return list_content(request, 'banner')
+
+
+def edit_banner(request, item_id):
+    return edit_content(request, 'banner', item_id)
+
+
+def create_banner(request):
+    return create_content(request, 'banner')
+
+
+def delete_banner(request, item_id):
+    return delete_content(request, 'banner', item_id)
+
+
+def list_banner_position(request):
+    return list_content(request, 'banner_position')
+
+
+def edit_banner_position(request, item_id):
+    return edit_content(request, 'banner_position', item_id)
+
+
+def create_banner_position(request):
+    return create_content(request, 'banner_position')
+
+
+def delete_banner_position(request, item_id):
+    return delete_content(request, 'banner_position', item_id)
+
+
+def list_social(request):
+    return list_content(request, 'social')
+
+
+def edit_social(request, item_id):
+    return edit_content(request, 'social', item_id)
+
+
+def create_social(request):
+    return create_content(request, 'social')
+
+
+def delete_social(request, item_id):
+    return delete_content(request, 'social', item_id)
+
+
+def list_sponsor(request):
+    return list_content(request, 'sponsor')
+
+
+def edit_sponsor(request, item_id):
+    return edit_content(request, 'sponsor', item_id)
+
+
+def create_sponsor(request):
+    return create_content(request, 'sponsor')
+
+
+def delete_sponsor(request, item_id):
+    return delete_content(request, 'sponsor', item_id)
+
+
+def list_gallery(request):
+    return list_content(request, 'gallery')
+
+
+def edit_gallery(request, item_id):
+    return edit_content(request, 'gallery', item_id)
+
+
+def create_gallery(request):
+    return create_content(request, 'gallery')
+
+
+def delete_gallery(request, item_id):
+    return delete_content(request, 'gallery', item_id)

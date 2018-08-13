@@ -71,24 +71,12 @@ class MatchForm(forms.ModelForm):
         }
         labels = settings.LABELS
 
-    class Media:
-        pass
-        # js = ('core/js/ajax.js',)
-
 
 class MatchDetailForm(forms.ModelForm):
     class Meta:
         model = MatchDetail
         fields = '__all__'
         labels = settings.LABELS
-
-    def __init__(self, *args, **kwargs):
-        super(MatchDetailForm, self).__init__(*args, **kwargs)
-        if self.instance.match_id:
-            q = Q(status=True) | Q(club_id__isin=(self.instance.match.home_team_id, self.instance.match.away_team_id))
-            self.fields['player'].queryset = Player.objects.filter(q)
-        else:
-            self.fields['player'].queryset = Player.objects.filter(status=True)
 
 
 class UserCacheMixin:
@@ -168,3 +156,39 @@ class ClubForm(ModelForm):
     class Meta:
         model = Club
         fields = ('name', 'stadium', 'status', 'image', 'background_img', 'website')
+
+
+class MatchActionForm(ModelForm):
+    class Meta:
+        model = MatchAction
+        fields = '__all__'
+
+
+class CategoryForm(ModelForm):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class BannerForm(ModelForm):
+    class Meta:
+        model = Banner
+        fields = '__all__'
+
+
+class BannerPositionForm(ModelForm):
+    class Meta:
+        model = BannerPosition
+        fields = '__all__'
+
+
+class SponsorForm(ModelForm):
+    class Meta:
+        model = Sponsor
+        fields = '__all__'
+
+
+class SocialForm(ModelForm):
+    class Meta:
+        model = Social
+        fields = '__all__'

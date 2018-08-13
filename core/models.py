@@ -265,10 +265,14 @@ class Match(TimeStampedModel):
         return "{0} VS {1} ({2} - {3})".format(self.home_team.name, self.away_team.name, self.home_end_score,
                                                self.away_end_score)
 
+    def get_name(self):
+        return self.__str__
+
 
 class MatchAction(TimeStampedModel):
     name = GeneralCharField(null=True, default=None, unique=True)
     image = models.ImageField(blank=True, null=True)
+    status = models.BooleanField(default=True)
 
 
 class MatchDetail(TimeStampedModel):
@@ -321,6 +325,7 @@ class Post(TimeStampedModel):
 class BannerPosition(TimeStampedModel):
     name = GeneralCharField()
     position_key = GeneralCharField()
+    status = models.BooleanField(default=True)
 
 
 class Banner(TimeStampedModel):

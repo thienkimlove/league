@@ -30,7 +30,7 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
-            <h4 class="page-title">Player Histories</h4>
+            <h4 class="page-title">Coach Histories</h4>
         </div>
     </div>
 
@@ -53,16 +53,16 @@
                                 </select>
                             </div>
 
-                            {% get_players as players %}
+                            {% get_coaches as coaches %}
                             <div class="form-group m-l-10">
-                                <label class="sr-only" for="">Players</label>
-                                <select name="player" class="form-control select2">
-                                    <option value="">Choose Player</option>
-                                    {% for player in players %}
-                                        {% if request.GET.player_id and request.GET.player_id|add:"0" == player.id|add:"0" %}
-                                            <option value="{{ player.id }}" selected>{{ player.name }}</option>
+                                <label class="sr-only" for="">Coaches</label>
+                                <select name="coach" class="form-control select2">
+                                    <option value="">Choose Coach</option>
+                                    {% for coach in coaches %}
+                                        {% if request.GET.coach_id and request.GET.coach_id|add:"0" == coach.id|add:"0" %}
+                                            <option value="{{ coach.id }}" selected>{{ coach.name }}</option>
                                         {% else %}
-                                            <option value="{{ player.id }}">{{ player.name }}</option>
+                                            <option value="{{ coach.id }}">{{ coach.name }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select>
@@ -84,7 +84,7 @@
                         <thead>
                             <tr>
                                 <th>Club</th>
-                                <th>Player</th>
+                                <th>Coach</th>
                                 <th>Date Joined</th>
                                 <th>Action</th>
                             </tr>
@@ -133,15 +133,15 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{% url 'core:player_history_data_table' %}',
+                    url: '{% url 'core:coach_history_data_table' %}',
                     data: function (d) {
                         d.club = $('select[name=club]').val();
-                        d.player = $('select[name=player]').val();
+                        d.coach = $('select[name=coach]').val();
                     }
                 },
                 columns: [
                     {data: 'club', name: 'club', orderable: false},
-                    {data: 'player', name: 'player', orderable: false},
+                    {data: 'coach', name: 'coach', orderable: false},
                     {data: 'date', name: 'date', orderable: false},
                     {data: 'action', name: 'action', orderable: false},
                 ],

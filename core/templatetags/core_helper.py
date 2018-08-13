@@ -168,3 +168,26 @@ def get_clubs():
 @register.simple_tag
 def get_players():
     return Player.objects.filter(status=True)
+
+
+@register.simple_tag
+def get_coaches():
+    return Coach.objects.filter(status=True)
+
+
+@register.simple_tag
+def get_matches():
+    matches = Match.objects.filter(status=True)
+    for match in matches:
+        match.name = match.get_name()
+    return matches
+
+
+@register.simple_tag
+def get_categories():
+    return Category.objects.filter(status=True)
+
+
+@register.simple_tag
+def get_banner_positions():
+    return BannerPosition.objects.filter(status=True)
