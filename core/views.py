@@ -20,9 +20,10 @@ def backend_index(request):
     if not request.user.is_authenticated:
         return redirect(reverse_lazy('core:login'))
 
+    matches = get_match_for_current_season()
 
     return render(request, 'core/index.html', {
-        'match_number': Match.objects.count(),
+        'match_number': matches.count(),
         'player_number': Player.objects.count(),
         'club_number': Club.objects.count(),
         'user_number': User.objects.count(),

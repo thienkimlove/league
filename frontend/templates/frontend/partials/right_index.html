@@ -60,13 +60,13 @@
                             <div class="assist01">
                                 <div class="content">
                                     <span class="number"> {{ forloop.counter }} </span>
-                                    <span class="name">{{ right_top_score_item.name }}</span>
+                                    <span class="name"><a href="{% url 'frontend:player_detail' right_top_score_item.id %}"> {{ right_top_score_item.name }}</a></span>
                                     <span>
                                         {% thumbnail right_top_score_item.image "42x40" crop="center" as im %}
                                             <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_top_score_item.name }}">
                                         {% endthumbnail %}
 
-                                        {{ right_top_score_item.name }}
+                                       <a href="{% url 'frontend:player_detail' right_top_score_item.id %}"> {{ right_top_score_item.name }}</a>
                                     </span>
                                     <span> Goals / Penalty Goals</span>
                                     <span class="number"> {{ right_top_score_item.num_score }} / {{ right_top_score_item.num_score_penalty }} </span>
@@ -89,8 +89,8 @@
                                       {% endthumbnail %}
 							     </span>
                                 <span class="name-club">
-							            		<span class="name">{{ right_top_score_item.name }}</span>
-							            		<span class="club">{{ right_top_score_item.club.name }}</span>
+							            		<span class="name"><a href="{% url 'frontend:player_detail' right_top_score_item.id %}">{{ right_top_score_item.name }}</a></span>
+							            		<span class="club"><a href="{% url 'frontend:clubs_detail' right_top_score_item.club.slug %}">{{ right_top_score_item.club.name }}</a></span>
 							            	</span>
                                 <span class="number"> {{ right_top_score_item.num_score }}({{ right_top_score_item.num_score_penalty }}) </span>
                             </div>
@@ -121,12 +121,12 @@
                                 <div class="assist01">
                                     <div class="content">
                                         <span class="number"> {{ forloop.counter }} </span>
-                                        <span class="name">{{ right_clean_sheet_item.name }}</span>
+                                        <span class="name"><a href="{% url 'frontend:player_detail' right_clean_sheet_item.id %}">{{ right_clean_sheet_item.name }}</a></span>
                                         <span>
                                              {% thumbnail right_clean_sheet_item.club.image "42x40" crop="center" as im %}
                                                  <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ right_clean_sheet_item.club.name }}">
                                              {% endthumbnail %}
-                                         {{ right_clean_sheet_item.club.name }}
+                                            <a href="{% url 'frontend:clubs_detail' right_clean_sheet_item.club.slug %}">{{ right_clean_sheet_item.club.name }}</a>
                                         </span>
                                         <span> CLean Sheets</span>
                                         <span class="number">  {{ right_clean_sheet_item.num_clean_sheet }} </span>
@@ -148,8 +148,14 @@
                                       {% endthumbnail %}
                                     </span>
                                     <span class="name-club">
-                                      <span class="name">{{ right_clean_sheet_item.name }}</span>
-                                      <span class="club">{{ right_clean_sheet_item.club.name }}</span>
+
+
+                                        <span class="name-club">
+							            		<span class="name"><a href="{% url 'frontend:player_detail' right_clean_sheet_item.id %}">{{ right_clean_sheet_item.name }}</a></span>
+							            		<span class="club"><a href="{% url 'frontend:clubs_detail' right_clean_sheet_item.club.slug %}">{{ right_clean_sheet_item.club.name }}</a></span>
+							            	</span>
+
+
                                     </span>
                                     <span class="number"> {{ right_clean_sheet_item.num_clean_sheet }}</span>
                                 </div>

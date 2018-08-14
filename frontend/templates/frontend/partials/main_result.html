@@ -31,41 +31,54 @@
 
     <div class="news-list">
         <!-- start block filter -->
+        {% for k,v in results.items %}
         <div class="filter-item">
-            <h3> Saturday 03 March</h3>
+            <h3>{{ k }}</h3>
+            <div class="table-responsive">
             <table style="width: 100%" class="filter table-responsive">
-                {% for result in results %}
+                {% for result in v %}
                     <tr>
-                        <td class="club">
-                            <strong> {{ result.home_team.name }} </strong>
+                        <td class="club" style="width: 28%">
+                            <strong> <a href="{% url 'frontend:clubs_detail' result.home_team.slug %}">{{ result.home_team.name }}</a> </strong>
                             {% thumbnail result.home_team.image "42x40" crop="center" as im %}
                                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ result.home_team.name }}">
                             {% endthumbnail %}
                         </td>
 
-                        <td> <span class="assist">{{ result.home_end_score }} - {{ result.away_end_score }}</span> </td>
+                        <td style="width: 10%"> 
+                            <span class="assist">
+                            {% if result.is_end %}
+                                {{ result.home_end_score }} - {{ result.away_end_score }}
+                            {% else %}
+                                {{ result.start_time|date:'H' }}: {{ result.start_time|date:'i' }}
+                            {% endif %}
+                            </span> 
+                        </td>
 
-                        <td class="club">
+                        <td class="club" style="width: 28%">
                             {% thumbnail result.away_team.image "42x40" crop="center" as im %}
                                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ result.away_team.name }}">
                             {% endthumbnail %}
 
-                            <strong> {{ result.away_team.name }} </strong>
+                            <strong> <a href="{% url 'frontend:clubs_detail' result.away_team.slug %}">{{ result.away_team.name }}</a> </strong>
                         </td>
 
-                        <td class="season">
+                        <td class="season" style="width: 29%">
                             {% thumbnail result.stadium.image "32x19" crop="center" as im %}
                                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ result.stadium.name }}">
                             {% endthumbnail %}
                             {{ result.stadium.name }}
                         </td>
-                        <td> <i class="fa fa-arrow-right"> </i> </td>
+                        <td style="width: 5%"> 
+                            <a href="{% url 'frontend:match_detail' result.id %}"><i class="fa fa-arrow-right"> </i></a> 
+                        </td>
                     </tr>
                 {% endfor %}
             </table>
+            </div>
 
         </div>
-
+        {% endfor %}
     </div>
 
     {% for banner_1 in banners %}

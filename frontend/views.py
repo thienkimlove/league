@@ -5,8 +5,9 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 # Create your views here.
-from django.utils.timezone import now
+from django.utils.timezone import now, localtime
 
+from core.helpers import get_match_for_current_season
 from core.models import *
 
 _logger = logging.getLogger()
@@ -22,9 +23,10 @@ def reload(request):
 
 def load_fixture_or_result(request, fixture=False, club=None):
 
+    matches = get_match_for_current_season()
     seasons = Season.objects.filter(status=True).all()
     banners = Banner.objects.filter(status=True).filter(position__position_key='normal_page').all()
-    results = Match.objects.filter(status=True)
+    results = matches.filter(status=True)
 
     if request.GET.get('season'):
         results = results.filter(league__season=request.GET.get('season'))
@@ -39,23 +41,33 @@ def load_fixture_or_result(request, fixture=False, club=None):
 
     if fixture is True:
         page = 'fixtures'
-        results = results.filter(start_time__gte=now())
+        results = results.filter(is_end=False)
     else:
         page = 'results'
-        results = results.filter(end_time__lte=now())
+        results = results.filter(is_end=True)
+
+    group_by_time = {}
+
+    for result in results:
+        temp_date = localtime(result.start_time).date().strftime('%Y-%m-%d')
+        if temp_date in group_by_time:
+            group_by_time[temp_date].append(result)
+        else:
+            group_by_time[temp_date] = [result]
 
     return {
         'seasons': seasons,
         'clubs': clubs,
         'page': page,
         'banners': banners,
-        'results': results,
+        'results': group_by_time,
     }
 
 
 def load_index(request, club=None):
+    matches = get_match_for_current_season()
     page = 'clubs' if club is not None else 'index'
-    match_this_weeks = Match.objects.filter(start_time__gte=now())
+    match_this_weeks = matches.filter(start_time__gte=now())
     main_club_id = None
     block_1_posts = Post.objects.filter(status=True).filter(display_place='block_1')
     block_2_posts = Post.objects.filter(status=True).filter(display_place='block_2')
@@ -150,7 +162,7 @@ def tables(request):
     seasons = Season.objects.filter(status=True).all()
     banners = Banner.objects.filter(status=True).filter(position__position_key='normal_page').all()
 
-    where = "WHERE DATE_FORMAT(t2.end_time, '%%Y-%%m-%%d %%H:%%i:%%s') <= NOW()"
+    where = "WHERE t2.is_end = True"
 
     if request.GET.get('match_week') and request.GET.get('match_week') == '1':
         where += """
@@ -292,6 +304,60 @@ def galleries_detail(request, slug):
     else:
         return redirect('frontend:index')
 
+
+def match_detail(request, id):
+    match = Match.objects.get(pk=id)
+    if not match:
+        return redirect('frontend:index')
+    page = 'fixtures' if match.is_end is False else 'results'
+
+    banners = Banner.objects.filter(status=True).filter(position__position_key='normal_page').all()
+    return render(request, 'frontend/match_detail.html', {'banners': banners, 'match': match, 'page': page})
+
+
+def player_detail(request, item_id):
+    page = "clubs"
+    player = Player.objects.get(pk=item_id)
+    if not player:
+        return redirect('frontend:index')
+    banners = Banner.objects.filter(status=True).filter(position__position_key='normal_page').all()
+    player_details = {
+        'appearances': 0,
+        'win': 0,
+        'lost': 0,
+        'draw': 0,
+        'careers': PlayerHistory.objects.filter(player=player)
+    }
+    # get match for current session.
+    matches = get_match_for_current_season()
+    match_done = matches.filter(is_end=True)
+
+    match_details = MatchDetail.objects.filter(match__in=match_done).filter(Q(action__name='Substitution') & Q(player=player))
+
+    player_details['appearances'] = match_done.filter(Q(matchdetail__in=match_details) | Q(start_home_team__in=[player]) | Q(start_away_team__in=[player])).distinct().count()
+    for match in match_done:
+        if match.home_team.id == player.club.id:
+            if match.home_end_score == match.away_end_score:
+                player_details['draw'] += 1
+            if match.home_end_score > match.away_end_score:
+                player_details['win'] += 1
+            if match.home_end_score < match.away_end_score:
+                player_details['lost'] += 1
+
+        if match.away_team.id == player.club.id:
+            if match.home_end_score == match.away_end_score:
+                player_details['draw'] += 1
+            if match.home_end_score > match.away_end_score:
+                player_details['lost'] += 1
+            if match.home_end_score < match.away_end_score:
+                player_details['win'] += 1
+
+    return render(request, 'frontend/player_detail.html', {
+        'banners': banners,
+        'player': player,
+        'page': page,
+        'player_details': player_details
+    })
 
 def ajax(request):
     pass

@@ -5,6 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.utils.http import is_safe_url
 from django.utils.safestring import mark_safe
+from django.utils.timezone import localtime
 from django.views import View
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
@@ -30,6 +31,13 @@ SOCIAL_CHOICES = {
     'twitter': _('Twitter'),
 }
 
+MATCH_PARTS = {
+    'first_half': _("First Half"),
+    'second_half': _("Second Half"),
+    'hiep_phu1': _("Hiệp phụ 1"),
+    'hiep_phu2': _("Hiệp phụ 2"),
+    'penalty_time': _("Đá Penalty")
+}
 
 
 class GuestOnlyView(View):
@@ -103,15 +111,16 @@ class ListJson(BaseDatatableView):
     # and make it return huge amount of data
     max_display_length = 500
 
+    order_columns = [
+        '-updated_at',
+        'name',
+    ]
+
 
 class StadiumListJson(ListJson):
     model = Stadium
 
     # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -129,7 +138,7 @@ class StadiumListJson(ListJson):
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "image": '<img width="100" height="auto" src="%s" />' % item.image.url if item.image else '',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -137,12 +146,6 @@ class StadiumListJson(ListJson):
 
 class SeasonListJson(ListJson):
     model = Season
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -156,11 +159,11 @@ class SeasonListJson(ListJson):
 
             json_data.append({
                 "name": item.name,
-                "start_date": item.start_date.strftime('%Y-%m-%d') if item.start_date else '',
-                "end_date": item.end_date.strftime('%Y-%m-%d') if item.end_date else '',
+                "start_date": display_date(item.start_date, '%Y-%m-%d') if item.start_date else '',
+                "end_date": display_date(item.end_date, '%Y-%m-%d') if item.end_date else '',
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -168,12 +171,6 @@ class SeasonListJson(ListJson):
 
 class PositionListJson(ListJson):
     model = Position
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -190,7 +187,7 @@ class PositionListJson(ListJson):
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "is_goal_keeper": "Yes" if item.is_goal_keeper else "No",
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -198,12 +195,6 @@ class PositionListJson(ListJson):
 
 class LeagueListJson(ListJson):
     model = League
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -220,7 +211,7 @@ class LeagueListJson(ListJson):
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "season": item.season.name if item.season else '',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -228,12 +219,6 @@ class LeagueListJson(ListJson):
 
 class ClubListJson(ListJson):
     model = Club
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -253,7 +238,7 @@ class ClubListJson(ListJson):
                 "stadium": item.stadium.name if item.stadium else '',
                 "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
                 "background_img": '<img width="100" height="auto" src="'+item.background_img.url+'" />' if item.background_img else '',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -261,12 +246,6 @@ class ClubListJson(ListJson):
 
 class PlayerListJson(ListJson):
     model = Player
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_player(qs, self.request)
@@ -289,7 +268,7 @@ class PlayerListJson(ListJson):
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "club": item.club.name if item.club else '',
                 "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -318,7 +297,7 @@ class PlayerHistoryListJson(ListJson):
             json_data.append({
                 "player": item.player.name if item.player else '',
                 "club": item.club.name if item.club else '',
-                "date": item.date.strftime('%Y-%m-%d'),
+                "date": display_date(item.date, '%Y-%m-%d'),
                 "action": mark_safe(action),
             })
         return json_data
@@ -326,12 +305,6 @@ class PlayerHistoryListJson(ListJson):
 
 class RefereeListJson(ListJson):
     model = Referee
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -352,7 +325,7 @@ class RefereeListJson(ListJson):
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -360,12 +333,6 @@ class RefereeListJson(ListJson):
 
 class CoachListJson(ListJson):
     model = Coach
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_player(qs, self.request)
@@ -387,7 +354,7 @@ class CoachListJson(ListJson):
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "club": item.club.name if item.club else '',
                 "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -416,7 +383,7 @@ class CoachHistoryListJson(ListJson):
             json_data.append({
                 "coach": item.coach.name if item.coach else '',
                 "club": item.club.name if item.club else '',
-                "date": item.date.strftime('%Y-%m-%d'),
+                "date": display_date(item.date, '%Y-%m-%d'),
                 "action": mark_safe(action),
             })
         return json_data
@@ -428,9 +395,7 @@ class MatchListJson(ListJson):
 
     # define the columns that will be returned
     order_columns = [
-        'home_team',
-        'away_team',
-        'updated_at',
+        '-start_time',
     ]
 
     def filter_queryset(self, qs):
@@ -443,22 +408,26 @@ class MatchListJson(ListJson):
         for item in qs:
             action = '<a class="table-action-btn" title="Match Details" href="' + reverse('core:match_detail_list') + '?match_id='+str(item.id)+'"><i class="fa fa-tasks text-success"></i></a><a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:match_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:match_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
 
+            start = display_time(item.start_time)
+
+            if item.start_time <= now():
+                start += '(Started)'
+
             json_data.append({
-                "home_team": item.home_team.name,
-                "away_team": item.away_team.name,
+                "vs": mark_safe(item.home_team.name + ' <b>VS</b> ' + item.away_team.name),
                 "start_home_team": ','.join(x.name for x in item.start_home_team.all()),
                 "start_away_team": ','.join(x.name for x in item.start_home_team.all()),
                 "referee": item.referee.name if item.referee else '',
                 "stadium": item.stadium.name if item.stadium else '',
                 "league": item.league.name if item.league else '',
-                "home_end_score": item.home_end_score,
-                "away_end_score": item.away_end_score,
-                "start_time": item.start_time.strftime('%Y-%m-%d %H:%M:%S'),
-                "end_time": item.end_time.strftime('%Y-%m-%d %H:%M:%S') if item.end_time else '',
+                "score": str(item.home_end_score) + ' - ' + str(item.away_end_score),
+                "start_time": start,
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
-                "action": mark_safe(action)
+                "updated_at": display_time(item.updated_at),
+                "action": mark_safe(action),
+                "is_end": '<i class="ion ion-checkmark-circled text-success"></i>'
+                if item.is_end is True else '<i class="ion ion-close-circled text-danger"></i>',
             })
         return json_data
 
@@ -473,7 +442,8 @@ class MatchDetailListJson(ListJson):
         'match',
         'match_action',
         'player',
-        'is_score',
+        'is_home_score',
+        'is_away_score',
         'is_penalty',
     ]
 
@@ -492,10 +462,11 @@ class MatchDetailListJson(ListJson):
                 "match_action": item.action.name if item.action else '',
                 "player": item.player.name if item.player else '',
                 "is_score": '<i class="ion ion-checkmark-circled text-success"></i>'
-                if item.is_score is True else '<i class="ion ion-close-circled text-danger"></i>',
+                if item.is_home_score is True or item.is_away_score is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "is_penalty": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.is_penalty is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "minute": str(item.minute) + "'",
+                "in_match_part": MATCH_PARTS[item.in_match_part],
                 "action": mark_safe(action)
             })
         return json_data
@@ -503,12 +474,6 @@ class MatchDetailListJson(ListJson):
 
 class MatchActionListJson(ListJson):
     model = MatchAction
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -525,7 +490,7 @@ class MatchActionListJson(ListJson):
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -533,12 +498,6 @@ class MatchActionListJson(ListJson):
 
 class CategoryListJson(ListJson):
     model = Category
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -554,7 +513,7 @@ class CategoryListJson(ListJson):
                 "name": item.name,
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -563,11 +522,6 @@ class CategoryListJson(ListJson):
 class PostListJson(ListJson):
     model = Post
 
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_post(qs, self.request)
@@ -588,7 +542,7 @@ class PostListJson(ListJson):
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "display_place": DISPLAY_CHOICES[item.display_place],
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -596,12 +550,6 @@ class PostListJson(ListJson):
 
 class BannerListJson(ListJson):
     model = Banner
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_banner(qs, self.request)
@@ -620,7 +568,7 @@ class BannerListJson(ListJson):
                 "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -628,12 +576,6 @@ class BannerListJson(ListJson):
 
 class BannerPositionListJson(ListJson):
     model = BannerPosition
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -648,7 +590,7 @@ class BannerPositionListJson(ListJson):
             json_data.append({
                 "name": item.name,
                 "position_key": item.position_key,
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "action": mark_safe(action)
@@ -658,12 +600,6 @@ class BannerPositionListJson(ListJson):
 
 class GalleryListJson(ListJson):
     model = Gallery
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -681,7 +617,7 @@ class GalleryListJson(ListJson):
                 "clubs": ', '.join(x.name for x in item.clubs.all()),
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data
@@ -689,12 +625,6 @@ class GalleryListJson(ListJson):
 
 class SocialListJson(ListJson):
     model = Social
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -713,7 +643,7 @@ class SocialListJson(ListJson):
                 "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "clubs": ', '.join(x.name for x in item.clubs.all()),
                 "action": mark_safe(action)
             })
@@ -722,12 +652,6 @@ class SocialListJson(ListJson):
 
 class SponsorListJson(ListJson):
     model = Sponsor
-
-    # define the columns that will be returned
-    order_columns = [
-        'name',
-        'updated_at',
-    ]
 
     def filter_queryset(self, qs):
         return filter_normal(qs, self.request)
@@ -745,7 +669,7 @@ class SponsorListJson(ListJson):
                 "image": '<img width="100" height="auto" src="'+item.image.url+'" />' if item.image else '',
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
-                "updated_at": item.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "updated_at": display_time(item.updated_at),
                 "action": mark_safe(action)
             })
         return json_data

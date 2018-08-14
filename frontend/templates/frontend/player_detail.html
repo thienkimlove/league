@@ -1,0 +1,147 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail core_helper countries %}
+
+{% block content %}
+
+
+    <div class="breadcrumbs style-v2">
+        <div class="container">
+            <div class="club-logo style-v2">
+                <div class="image">
+                    {% thumbnail player.image "255x280" crop="center" as im %}
+                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                             alt="{{ player.name }}">
+                    {% endthumbnail %}
+                </div>
+                <div class="content">
+                    <h2> {{ player.club_number }} </h2>
+                    <h2> {{ player.name }} </h2>
+                    <span> Club:<strong> {{ player.club.name }}</strong></span>
+                    <span> Position:<strong> {{ player.position.name }} </strong></span>
+                    <span class="club">
+                        {% thumbnail player.club.image "47x37" crop="center" as im %}
+                            <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                 alt="{{ player.club.name }}">
+                        {% endthumbnail %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content homepage -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Start row 1 -->
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="block-start">
+                        <div class="block-title">Profile </div>
+                        <div class="block-content">
+                            <div class="block-start-item">
+                                <div class="content-center border-right">
+                                    <table class="table-player-time">
+                                        <tr>
+                                            <td>Nationality </td>
+                                            <td class="align-right">
+                                                <link rel="stylesheet" href="{% static 'flags/sprite.css' %}">
+                                                <i class="{{ player.nationality.flag_css }}"></i>
+                                                {{ player.nationality.name }} </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Age</td>
+                                            <td class="align-right">{{ player.dob | calculate_age }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Date of Birth</td>
+                                            <td class="align-right">{{ player.dob| date:'d m Y' }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="content-center border-right">
+                                    <table class="table-player-time">
+                                        <tr>
+                                            <td>Height</td>
+                                            <td class="align-right"> {{ player.height }}cm</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Weight</td>
+                                            <td class="align-right"> {{ player.weight }}kg</td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+
+                                <div class="content-center">
+                                    <span class="text-red font-size-100">{{ player_details.appearances }}</span>
+                                    <h4> Appearances</h4>
+                                </div>
+
+                                <div class="content-right table-responsive">
+                                    <table class="process-right-table">
+                                        <tr>
+                                            <td> Win </td>
+                                            <td>  {{ player_details.win }} </td>
+                                            <td>
+                                                <div class="process-right"> <span style="width:75%;"> </span></div>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+
+                                            <td> Losses </td>
+                                            <td> {{ player_details.lost }} </td>
+                                            <td>
+                                                <div class="process-right"> <span style="width:15%;"> </span></div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td> Draw </td>
+                                            <td>  {{ player_details.draw }} </td>
+                                            <td>
+                                                <div class="process-right"> <span style="width:45%;"> </span></div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start row 2 -->
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="block-start">
+                        <div class="block-title">Career Statistics</div>
+                        <div class="block-content">
+                            <div class="block-assists table-responsive">
+                                <table class="table-player" style="width: 100%;">
+                                    <tr>
+                                        <th><strong> Club History </strong> </th>
+                                        <th><strong> Joined At </strong> </th>
+                                    </tr>
+                                    {% for career in player_details.careers %}
+                                    <tr>
+                                        <td>{{ career.club.name }}</td>
+                                        <td>{{ career.date|date:'d-m-Y' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

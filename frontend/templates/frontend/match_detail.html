@@ -1,0 +1,231 @@
+{% extends 'frontend/base.html' %}
+{% load staticfiles i18n thumbnail core_helper %}
+
+{% block content %}
+
+
+    <div class="breadcrumbs">
+        <div class="container">
+            <h3> Result </h3>
+            <ul>
+                <li><a href="{% url 'frontend:index' %}"> <i class="fa fa-home"> </i> </a></li>
+                <li><i class="fa fa-arrow-right"> </i>
+                    {% if page == 'results' %}
+                        <a href="{% url 'frontend:results' %}"> Result </a>
+                    {% else %}
+                        <a href="{% url 'frontend:fixtures' %}"> Fixtures </a>
+                    {% endif %}
+                </li>
+                <li><i class="fa fa-arrow-right"> </i> {{ match|get_name_match }} </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content homepage -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <!-- start left column -->
+                <div class="col-md-9 col-sm-12 col-xs-12">
+
+                    {% get_details match as  match_details %}
+
+                    <div class="result-mart-detail">
+                        <div class="logo-left">
+                            <div class="image">
+                                {% thumbnail match.home_team.image "92x99" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                         alt="{{ match.home_team.name }}">
+                                {% endthumbnail %}
+                            </div>
+                            <div class="name"> {{ match.home_team.name }}</div>
+                        </div>
+
+
+                        <div class="content">
+                            <div class="mart-result">
+                                <p> {% if match.is_end %}Score {% else %} Time {% endif %}</p>
+                                <p class="font-size-30">
+                                    {% if match.is_end %}
+                                        {{ match.home_end_score }} - {{ match.away_end_score }}
+                                    {% else %}
+                                        {{ match.start_time|date:'H' }}: {{ match.start_time|date:'i' }}
+                                    {% endif %}
+                                </p>
+                                <p><span>Half time: </span> {{ match_details.haft_score }} </p>
+                            </div>
+                            <div class="mart-detail">
+
+                                <div class="detail-01">
+                                    <ul>
+                                        {% for detail_score in match_details.match %}
+                                            {% if detail_score.is_home_score %}
+                                                <li> {{ detail_score.player.name }} {{ detail_score.minute }}’</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                                <div class="detail-02">
+                                    <ul>
+                                        {% for detail_score in match_details.match %}
+                                            {% if detail_score.is_away_score %}
+                                                <li> {{ detail_score.player.name }} {{ detail_score.minute }}’</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="logo-right">
+                            <div class="image">
+                                {% thumbnail match.away_team.image "92x99" crop="center" as im %}
+                                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                         alt="{{ match.away_team.name }}">
+                                {% endthumbnail %}
+                            </div>
+                            <div class="name">{{ match.away_team.name }}</div>
+                        </div>
+
+                    </div>
+
+                    <div class="banner-marth-menu">
+                        <ul>
+                            <li><a href="{% url 'frontend:match_detail' match.id %}?sub=facts"
+                                   class="{% if not request.GET.sub or request.GET.sub == 'facts' %}active{% endif %}">
+                                Match Facts </a></li>
+                            {% comment %}<li><a href="{% url 'frontend:match_detail' match.id %}?sub=head"
+                                   class="{% if request.GET.sub == 'head' %}active{% endif %}"> Head to Head </a></li>{% endcomment %}
+                        </ul>
+                    </div>
+
+                    {% if not request.GET.sub or request.GET.sub == 'facts' %}
+                        <div class="block-marth-content">
+                            <!-- start block filter -->
+                            {% if match.man_of_match %}
+                                <div class="filter-item">
+                                    <h3><strong>Man of the match </strong></h3>
+                                    <table style="width: 100%" class="filter table-responsive">
+                                        <tr>
+                                            <td>
+                                                <div class="player-rating">
+                                                    <span class="rating"> {{ match.man_of_match_score }} <i
+                                                            class="fa fa-star"> </i> </span>
+                                                    <img class="image-radius image-40"
+                                                         src="{% static "frontend/images/assist03.png" %}"
+                                                         alt="assist03"/>
+                                                </div>
+                                            </td>
+                                            <td></td>
+                                            <td>
+                                                <strong> {{ match.man_of_match.name }} </strong> <br/>
+                                                {{ match.match.man_of_match.club.name }}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+
+                                        {% for detail_match in match_details.match %}
+                                            {% if detail_match.player.club.id == detail_match.match.home_team.id %}
+                                                <tr>
+                                                    <td> {{ detail_match.minute }}'</td>
+                                                    <td>
+                                                        {% if detail_match.action.image %}
+                                                            <img src="{{ detail_match.action.image.url }}"
+                                                                 alt="icon-s4"/>
+                                                        {% else %}
+                                                            {{ detail_match.action.name }}
+                                                        {% endif %}
+
+                                                    </td>
+                                                    <td class="align-01">
+                                                        {{ detail_match.player.name }}
+                                                        <br/>
+                                                        {{ detail_match.more_detail| display_not_none }}
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+
+
+
+                                            {% else %}
+
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td class="align-right align-01">
+                                                      <span>
+                                                        {{ detail_match.player.name }}
+                                                          <br/>
+                                                        {{ detail_match.more_detail|display_not_none }}
+                                                      </span>
+                                                        <span></span>
+                                                    </td>
+                                                    <td>
+                                                        {% if detail_match.action.image %}
+                                                            <img src="{{ detail_match.action.image.url }}"
+                                                                 alt="icon-s4"/>
+                                                        {% else %}
+                                                            {{ detail_match.action.name }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td> {{ detail_match.minute }}'</td>
+                                                </tr>
+
+
+
+                                            {% endif %}
+
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            {% endif %}
+
+                            <div class="block-marth-detail">
+                                <table class="table-player-time">
+                                    <tr>
+                                        <td>Tournament</td>
+                                        <td><strong>{{ match.league.name }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Referee</td>
+                                        <td><strong>{{ match.referee.name }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stadium</td>
+                                        <td><strong>{{ match.stadium.name }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Attendance</td>
+                                        <td><strong> {{ match.attend_number }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Match Date</td>
+                                        <td><strong>{{ match.start_time | date:'d b Y H:i' }}</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="block-marth-content">
+
+                            Head to Head HTML?
+
+                        </div>
+                    {% endif %}
+
+                </div>
+
+                <!-- start right column -->
+                {% right_content %}
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

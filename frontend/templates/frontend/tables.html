@@ -50,7 +50,8 @@
                     </form>
 
                     <!-- start block filter -->
-                    <table style="width: 100%" class="filter table-responsive">
+                    <div class="table-responsive">
+                    <table style="width: 100%" class="filter">
                         <tr>
                             <th> Position</th>
                             <th> Club</th>
@@ -74,7 +75,7 @@
                                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
                                      alt="{{ table.name }}">
                             {% endthumbnail %}
-                            {{ table.name }}
+                           <a href="{% url 'frontend:clubs_detail' table.slug %}"> {{ table.name }}</a>
                         </td>
                         <td> {{ table.mp }} </td>
                         <td>  {{ table.win }} </td>
@@ -100,7 +101,7 @@
 
                     </table>
 
-
+                </div>
                 </div>
 
             </div>

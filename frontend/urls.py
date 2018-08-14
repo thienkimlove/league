@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^news/(?P<slug>[\w-]+)\.html$', news_detail, name='news_detail'),
     url(r'^clubs/(?P<slug>[\w-]+)\.html$', clubs_detail, name='clubs_detail'),
     url(r'^galleries/(?P<slug>[\w-]+)\.html$', galleries_detail, name='galleries_detail'),
+    url(r'^match/(?P<id>\d+)$', match_detail, name='match_detail'),
+    url(r'^player/(?P<item_id>\d+)$', player_detail, name='player_detail'),
 
     url(r'^news$', news, name='news'),
     url(r'^results$', results, name='results'),

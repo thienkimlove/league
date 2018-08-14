@@ -70,7 +70,7 @@ class TimeStampedModel(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ["-created_at"]
+        ordering = ["-updated_at"]
 
     def class_name(self):
         return self.__class__.__name__
@@ -177,6 +177,7 @@ class Player(TimeStampedModel):
     weight = models.PositiveSmallIntegerField(null=True, default=None, blank=True)
     position = models.ForeignKey(Position, on_delete=models.CASCADE, null=True, default=None, blank=True)
     club = models.ForeignKey(Club, on_delete=models.CASCADE, blank=True, null=True, default=None)
+    club_number = models.SmallIntegerField(default=0, null=True, blank=True)
     image = models.ImageField(null=True, default=None, blank=True)
     status = models.BooleanField(default=True)
 
@@ -250,12 +251,15 @@ class Match(TimeStampedModel):
 
     referee = models.ForeignKey(Referee, on_delete=models.CASCADE)
     start_time = models.DateTimeField(null=True)
-    end_time = models.DateTimeField(null=True, default=None)
     stadium = models.ForeignKey(Stadium, on_delete=models.CASCADE)
     league = models.ForeignKey(League, on_delete=models.CASCADE)
     home_end_score = models.SmallIntegerField(default=0)
     away_end_score = models.SmallIntegerField(default=0)
     status = models.BooleanField(default=True)
+    is_end = models.BooleanField(default=False)
+    man_of_match = models.ForeignKey(Player, on_delete=models.CASCADE, blank=True, null=True)
+    man_of_match_score = models.FloatField(default=0.0, blank=True, null=True)
+    attend_number = models.IntegerField(default=0, blank=True, null=True)
 
     class Meta:
         verbose_name = _('Match')
@@ -276,12 +280,25 @@ class MatchAction(TimeStampedModel):
 
 
 class MatchDetail(TimeStampedModel):
+
+    MATCH_PARTS = (
+        ('first_half', _("First Half")),
+        ('second_half', _("Second Half")),
+        ('hiep_phu1', _("Hiệp phụ 1")),
+        ('hiep_phu2', _("Hiệp phụ 2")),
+        ('penalty_time', _("Đá Penalty")),
+
+    )
+
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
     action = models.ForeignKey(MatchAction, on_delete=models.CASCADE, blank=True, null=True)
-    is_score = models.BooleanField(default=False)
+    is_home_score = models.BooleanField(default=False)
+    is_away_score = models.BooleanField(default=False)
     is_penalty = models.BooleanField(default=False)
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, default=None)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, default=None, blank=True)
     minute = models.SmallIntegerField(null=True, blank=True)
+    more_detail = models.CharField(max_length=255, blank=True, null=True)
+    in_match_part = GeneralCharField(choices=MATCH_PARTS, blank=True, null=True)
 
 
 class Category(TimeStampedModel):

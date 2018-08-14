@@ -6,7 +6,7 @@
     <div class="row-matchweek">
         <div class="container">
             <div class="block block-matchweek">
-                <div class="block-title"> <span>Matchweek 7 </span> </div>
+                <div class="block-title"> <span>Match This Week </span> </div>
                 <div class="block-content">
                     <!-- Start matchweek-carousel -->
                     <div class="block-carousel">
@@ -32,7 +32,7 @@
                                         </span>
                                     </div>
                                     <div class="matchweek-link">
-                                        <a href="{% url 'frontend:fixtures' %}"> Start </a>
+                                        <a href="{% url 'frontend:match_detail' match_this_week.id %}"> Start </a>
                                     </div>
                                 </div>
                             </div>

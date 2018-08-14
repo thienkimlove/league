@@ -2,7 +2,10 @@ from django.apps import apps
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils.datetime_safe import datetime, time
 from django.utils.text import capfirst
+from django.utils.timezone import localtime, localdate, make_aware
+
 from core.forms import *
 
 
@@ -120,6 +123,8 @@ def filter_coach_history(qs, request):
 def filter_match(qs, request):
     # simple example:
 
+    qs = qs.order_by("-start_time")
+
     filter_club = request.GET.get('club', None)
     if filter_club:
         filter_club = int(filter_club)
@@ -171,3 +176,27 @@ def filter_banner(qs, request):
         qs = qs.filter(position=filter_position)
 
     return qs
+
+
+def display_time(time, format="%a, %d %b %Y %H:%M"):
+    return localtime(time).strftime(format)
+
+
+def display_date(date, format='%Y-%m-%d'):
+    return display_time(make_aware(datetime.combine(date, time())), format)
+
+
+def get_current_season():
+    today = now().date()
+    season = Season.objects.filter(Q(start_date__lt=today) & Q(end_date__gt=today))
+    if season:
+        return season.first()
+    return
+
+
+def get_match_for_current_season():
+    current_season = get_current_season()
+    matches = Match.objects.filter(league__season=current_season).filter(status=True)
+    for match in matches:
+        match.name = match.get_name()
+    return matches
