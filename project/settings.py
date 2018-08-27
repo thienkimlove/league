@@ -136,7 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'vi'
+LANGUAGE_CODE = 'en_US'
 
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
@@ -296,6 +296,6 @@ TAGGIT_CASE_INSENSITIVE = True
 USE_DJANGO_JQUERY = True
 
 
-APP_NAME = 'Super System'
+APP_NAME = 'LPL ADMIN'
 USE_REMEMBER_ME = True
 LOGIN_REDIRECT_URL = 'backend/index'

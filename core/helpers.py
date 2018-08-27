@@ -130,6 +130,19 @@ def filter_match(qs, request):
         filter_club = int(filter_club)
         qs = qs.filter(Q(home_team=filter_club) | Q(away_team=filter_club))
 
+    filter_season = request.GET.get('season', None)
+    if filter_season:
+        filter_season = int(filter_season)
+        qs = qs.filter(league__season=filter_season)
+
+    filter_date = request.GET.get('date', None)
+
+    if filter_date:
+        temp_date = filter_date.split(" - ")
+        start_date = datetime.strptime(temp_date[0] + " 00:00:00", "%d/%m/%Y %H:%M:%S")
+        end_date = datetime.strptime(temp_date[1] + " 23:59:59", "%d/%m/%Y %H:%M:%S")
+        qs = qs.filter(start_time__gte=start_date).filter(start_time__lte=end_date)
+
     return qs
 
 
@@ -162,6 +175,11 @@ def filter_post(qs, request):
     if filter_category:
         filter_category = int(filter_category)
         qs = qs.filter(category=filter_category)
+
+    filter_club = request.GET.get('club', None)
+    if filter_club:
+        filter_club = int(filter_club)
+        qs = qs.filter(clubs__in=[filter_club])
 
     return qs
 

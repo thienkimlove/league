@@ -40,9 +40,7 @@ body{
 body p{margin: 0;}
 body h1{font-size: 72px; font-weight: 800; margin-top: 0; color: #f9f9f9; text-transform: uppercase;}
 body h2{font-size: 52px; color: #212121; font-weight: 900;}
-html a:hover { 
-	color: #e1e286;
-}
+
 .no-margin {margin: 0 !important;}
 .no-padding {padding: 0!important;}
 .position-static{ position: static;}
@@ -154,8 +152,10 @@ header{font-weight: 400;position: relative;}
 .block-link li {padding-bottom:20px;}
 
 a{outline: none; color: #666;} 
+
 a:hover{
 	color: #000;
+	outline: none;
 	text-decoration: underline;
 }
 
@@ -205,7 +205,7 @@ img{
 .matchweek-content .match-detail {display: flex;}
 .matchweek-content .match-detail .team { text-align: center; }
 .matchweek-content .match-detail .team img { display: inline-block; }
-.matchweek-content .team-name {  color: #fff; width: 100%; text-align: center; display: inline-block;}
+.matchweek-content .team-name {  color: #fff; width: 100%; text-align: center; display: inline-block; font-size: 12px;}
 .matchweek-content .result-match { padding:8px ; font-size: 19px; color: #f8f992; font-family: 'CoreSansC-65Bold'; min-width: 70px;}
 
 .matchweek-link { background: #254152; padding-top:50px; padding-left:5px; padding-right:5px; vertical-align: middle;}
@@ -217,13 +217,14 @@ img{
 	background: url('../images/bg-content-homepage.jpg') no-repeat center top;
 }
 
-.block-news {position: relative; margin-bottom:40px; overflow: hidden;}
+.block-news {position: relative; margin-bottom:60px; overflow: hidden;}
 .block-news .block-content {position: relative;overflow: hidden;}
 
 .block-news1 {position: relative; margin-bottom:40px; overflow: hidden;}
 .block-news1 .block-content {position: relative;overflow: hidden;}
 .block-news1 .block-carousel {}
-.block-news1 .block-carousel .carousel-item { width: 31%;}
+.block-news1 .block-carousel .carousel-item { width: 32%; float: left; margin-right: 17px;}
+.block-news1 .block-carousel .carousel-item:last-child { margin-right:0px; }
 
 .block-media-gallery .block-carousel {}
 .block-media-gallery .block-carousel .carousel-item { width: 47%;}
@@ -246,6 +247,9 @@ img{
 .news-item.style-v2 .images { width: 45%; display: inline-block;}
 .news-item.style-v2 .new-content { width: 54%; display:inline-block; vertical-align: top; padding-left:20px} 
 .news-item.style-v2 .new-content .news-name { color:#333;}
+
+.news-list .news-item.style-v2 .images { width: 35%; display: inline-block;}
+.news-list .news-item.style-v2 .new-content { width: 64%; display:inline-block; vertical-align: top; padding-left:20px} 
 
 .news-item.style-v2 .new-content .related-new { padding-top: 20px;}
 .news-item.style-v2 .new-content .related-new ul { margin: 0; padding:0;}
@@ -543,11 +547,14 @@ button.load-more { margin:20px auto 40px; background: #124dab; padding:10px 40px
 
 .list-season { margin: 20px 0;}
 .season-item { margin-bottom: 30px; border-radius: 5px;}
-.season-item .content { padding: 20px; color: #fff; position: relative;}
+.season-item .content { padding: 20px; color: #fff; position: relative; min-height: 185px;}
 .season-item .content .name { text-transform: uppercase; font-family:'CoreSansC-65Bold'; padding-bottom:10px;}
+.season-item .content .name a { color: #fff; }
+.season-item .content .name a:hover { text-decoration: underline; }
+
 .season-item .image img { width: 100%; height: auto;}
 .season-item .content .link-club {padding: 5px 10px; color:#fff; border-radius: 5px; display: inline-block;font-family: 'CoreSansC-35Light'; max-width: 60%; margin: 10px 0}
-.season-item .content .club-logo { position: absolute; bottom:-40px; right:20px; padding:20px; background: #fff;}
+.season-item .content .club-logo { position: absolute; bottom:-40px; right:10px; padding:20px; background: #fff;}
 
 .blue { background:#004d98;}
 .blue .link-club { background: #00366a;}
@@ -600,12 +607,18 @@ button.load-more { margin:20px auto 40px; background: #124dab; padding:10px 40px
 	justify-content:space-between;
 	margin: 10px 0; 
 }
+.filter tr:hover {
+	background: #ebebeb;
+}
 .filter td,
 .filter th { padding:10px 0; display:}
 .filter span.assist { background: #124dab; color: #fff; padding:3px 10px;}
 
 .filter td:first-child,
 .filter th:first-child { padding-left:10px;}
+.filter td.club { min-width: 200px; }
+.filter td.club:first-child { text-align: right; padding-right:10px; }
+.filter td.club:first-child > strong{ padding-right:10px; }
 
 .sidebar .block { position: relative;}
 .sidebar .block .block-title {background: #124dab; padding:10px 15px; color: #fff; font-size:16px; font-family:'CoreSansC-65Bold'; text-transform: uppercase; border-radius:3px 3px 0 0 }
@@ -850,8 +863,17 @@ button.load-more { margin:20px auto 40px; background: #124dab; padding:10px 40px
 }
 
 @media(max-width:767px) {
-	.logo {text-align: center; display: inline-block;}
+	.header-default {
+		height: 80px;
+		margin: 0;
+	}
+	.logo {text-align: center; display: inline-block; padding-top: 8px;}
+	.logo img { width: 120px !important; height: auto }
 	.club-team { display: none; }
+
+	.main-content-homepage {
+		background:none;
+	}
 
 	.nav-links li a:after { display: none; }
 	.news-item.style-v1,
@@ -887,6 +909,28 @@ button.load-more { margin:20px auto 40px; background: #124dab; padding:10px 40px
 	.block-matchweek.style2 .carousel-item { width: 48% }
 	.block-media-gallery .block-carousel .carousel-item{ width: 45%; }
 	.block-news1 .block-carousel .carousel-item { width: 45%;}
+	.news-item .new-content {padding:20px 0;}
+	.brand-list .block-content .block-carousel .carousel-item { width: 32%; padding-bottom:20px; }
+	.news-list .news-item.style-v2 .images { width: 100%; }
+	.news-list .news-item.style-v2 .new-content { width: 100%; padding-top: 20px; padding-left:0; }
+	.season-item .image img { width: 100% !important; height: auto; }
+
+	.block-news1 .news-item.style-v3,
+	.block-media-gallery .news-item.style-v3 {
+		float:left;
+		border-radius: 10px; 
+		border:1px solid #ddd;
+		padding:10px;
+		-webkit-box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.15);
+		-moz-box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.15);
+		box-shadow: 0px 0px 4px 1px rgba(0,0,0,0.15);
+	}
+	.block-news1 .news-item.style-v3 .images,
+	.block-media-gallery .news-item.style-v3 .images  { float:left; display: inline-block; width: 30%!important; margin-right: 10px; margin-bottom: 0;}
+	.block-news1 .news-item.style-v3 .new-content,
+	.block-media-gallery .news-item.style-v3 .new-content { width: 65%!important; display: inline-block; }
+	.block-news1 .news-item.style-v3 .new-content .news-des,
+	.block-media-gallery .news-item.style-v3 .new-content .news-des { display: none;}
 }
 
 @media(max-width:480px) {
@@ -896,6 +940,107 @@ button.load-more { margin:20px auto 40px; background: #124dab; padding:10px 40px
 	.block-matchweek.style2 .carousel-item { width: 100% }
 	.block-media-gallery .block-carousel .carousel-item{ width: 100%; }
 	.block-news1 .block-carousel .carousel-item { width: 100%;}
+}
+
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #555;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #000;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    font-size: 30px;
+    margin-left: 50px;
+}
+
+#button-menu {
+    transition: margin-left .5s;
+    padding-left: 10px;
+    float: right;
+    color: #fff;
+    margin-top: 25px;
+    margin-left:10px;
+    border-left: 1px solid rgba(255,255,255, 0.5);
+    display: inline-block;
+    cursor: pointer;
+}
+
+#button-menu span .fa { color: #fff;}
+.sidenav .nav-links { 
+	margin-top: 0px;
+	border-top: 1px solid #f2f2f2;
+}
+.sidenav .nav-links li {
+	display: block;
+	float: left;
+	width: 100%;
+	border-bottom: 1px solid #f2f2f2;
+}
+.sidenav .nav-links li:hover {
+	border-color:#124dab;
+	transition: 0.5s;
+}
+
+.sidenav .nav-links li a {
+	color: #555;
+}
+.sidenav .nav-links li a:hover {
+	color:#124dab;
+	transition: 0.5s;
+}
+
+.custom-search { 
+	float: right; 
+	position: relative; 
+	width: 40px;
+	padding: 0 10px !important;
+	margin-top: 15px;
+	display: inline-block; 
+}
+.custom-search > button {
+	border:0;
+	background: none !important;
+	box-shadow: none !important;
+	color: #fff;
+	font-size: 18px;
+}
+.custom-search > button:hover,
+.custom-search > button:focus {
+	border:0;
+	background: none !important;
+	box-shadow: none!important;
+	color: #e1e286!important;
+}
+
+.custom-search .dropdown-menu { min-width: 200px; padding:10px; top: 100%;}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
 }
 
 

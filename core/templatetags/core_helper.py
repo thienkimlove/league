@@ -106,11 +106,12 @@ def right_content(club_id=None):
     right_top_score = Player.objects.raw("""
        SELECT t1.*, 
        SUM(CASE WHEN (t2.is_home_score = True OR t2.is_away_score = True) THEN 1 ELSE 0 END) as num_score, 
-       SUM(CASE WHEN t2.is_penalty = True THEN 1 ELSE 0 END) as num_score_penalty from core_player t1 
+       SUM(CASE WHEN t6.name = 'Penalty' THEN 1 ELSE 0 END) as num_score_penalty from core_player t1 
        LEFT join core_matchdetail t2 on t1.id = t2.player_id  
        LEFT join core_match t3 on t2.match_id = t3.id  
        LEFT join core_league t4 on t3.league_id = t4.id
        LEFT join core_season t5 on t4.season_id = t5.id
+       LEFT join core_matchaction t6 on t2.action_id = t6.id
        WHERE t3.is_end = True      
         AND t5.start_date < CURRENT_DATE() 
             AND t5.end_date > CURRENT_DATE()  
@@ -180,6 +181,11 @@ def get_clubs():
 
 
 @register.simple_tag
+def get_seasons():
+    return Season.objects.filter(status=True)
+
+
+@register.simple_tag
 def get_players():
     return Player.objects.filter(status=True)
 
@@ -231,6 +237,10 @@ def get_details(match):
         details['haft_score'] = "{0} - {1}".format(half_score_home, half_score_away)
 
     return details
+
+@register.simple_tag
+def get_post_display_time(post):
+    return post.display_time if post.display_time else post.created_at
 
 
 @register.filter

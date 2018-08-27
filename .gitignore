@@ -9,4 +9,3 @@ __pycache__/
 *.egg-info
 # SQLite DB file
 db.sqlite3
-.venv

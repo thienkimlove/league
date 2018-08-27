@@ -19,7 +19,7 @@
 
                             </div>
                             <div class="new-content">
-                                <div class="time"><i class="fa fa-clock-o"> </i>{{ post.created_at }}</div>
+                                <div class="time"><i class="fa fa-clock-o"> </i>{{ post.display_time }}</div>
                                 <div class="news-name"><a
                                         href="{% url 'frontend:news_detail' post.slug %}">{{ post.name }}</a></div>
                                 <div class="news-des">
@@ -70,7 +70,7 @@
                                 href="{% url 'frontend:news_detail' first_block_2_post.slug %}">{{ first_block_2_post.name }}</a>
                         </div>
 
-                        <div class="time"><i class="fa fa-clock-o"> </i>{{ first_block_2_post.created_at }}</div>
+                        <div class="time"><i class="fa fa-clock-o"> </i>{{ first_block_2_post.display_time }}</div>
 
                         <div class="news-des">
                             {{ first_block_2_post.desc }}

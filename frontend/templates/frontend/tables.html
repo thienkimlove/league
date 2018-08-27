@@ -52,7 +52,7 @@
                     <!-- start block filter -->
                     <div class="table-responsive">
                     <table style="width: 100%" class="filter">
-                        <tr>
+                        <tr class="visible-lg visible-md">
                             <th> Position</th>
                             <th> Club</th>
                             <th> Play</th>
@@ -65,17 +65,36 @@
                             <th> Points</th>
                             <th> Next</th>
                         </tr>
-
+                         <tr class="visible-sm visible-xs">
+                            <th> Pos</th>
+                            <th> Club</th>
+                            <th> Pl</th>
+                            <th> W</th>
+                            <th> D</th>
+                            <th> L</th>
+                            <th> GF</th>
+                            <th> GA</th>
+                            <th> GD</th>
+                            <th> Pts</th>
+                            <th> N</th>
+                        </tr>
                         {% for table in tables %}
                         <tr class="{% odd_or_even_class forloop.counter %}">
 
                         <td> {{ forloop.counter }} </td>
-                        <td>
+                        <td class="visible-lg visible-md">
                             {% thumbnail table.image "42x40" crop="center" as im %}
                                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
                                      alt="{{ table.name }}">
                             {% endthumbnail %}
                            <a href="{% url 'frontend:clubs_detail' table.slug %}"> {{ table.name }}</a>
+                        </td>
+                        <td class="visible-sm visible-xs">
+                            {% thumbnail table.image "42x40" crop="center" as im %}
+                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                                     alt="{{ table.name }}">
+                            {% endthumbnail %}
+                            <a href="{% url 'frontend:clubs_detail' table.slug %}"> {{ table.short_name }}</a>
                         </td>
                         <td> {{ table.mp }} </td>
                         <td>  {{ table.win }} </td>

@@ -232,6 +232,7 @@ class ClubListJson(ListJson):
 
             json_data.append({
                 "name": item.name,
+                "short_name": item.short_name,
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "website": item.website,
@@ -405,6 +406,7 @@ class MatchListJson(ListJson):
         # prepare list with output column data
         # queryset is already paginated here
         json_data = []
+        i = 1
         for item in qs:
             action = '<a class="table-action-btn" title="Match Details" href="' + reverse('core:match_detail_list') + '?match_id='+str(item.id)+'"><i class="fa fa-tasks text-success"></i></a><a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:match_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:match_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
 
@@ -413,14 +415,18 @@ class MatchListJson(ListJson):
             if item.start_time <= now():
                 start += '(Started)'
 
+            score_home = str(item.home_end_score) if item.is_end else '__'
+            score_away = str(item.away_end_score) if item.is_end else '__'
+
             json_data.append({
+                "stt": str(i),
                 "vs": mark_safe(item.home_team.name + ' <b>VS</b> ' + item.away_team.name),
                 "start_home_team": ','.join(x.name for x in item.start_home_team.all()),
                 "start_away_team": ','.join(x.name for x in item.start_home_team.all()),
                 "referee": item.referee.name if item.referee else '',
                 "stadium": item.stadium.name if item.stadium else '',
                 "league": item.league.name if item.league else '',
-                "score": str(item.home_end_score) + ' - ' + str(item.away_end_score),
+                "score": "{0} - {1}".format(score_home, score_away),
                 "start_time": start,
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
@@ -429,6 +435,7 @@ class MatchListJson(ListJson):
                 "is_end": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.is_end is True else '<i class="ion ion-close-circled text-danger"></i>',
             })
+            i += 1
         return json_data
 
 
@@ -438,13 +445,10 @@ class MatchDetailListJson(ListJson):
 
     # define the columns that will be returned
     order_columns = [
-        'minute',
-        'match',
-        'match_action',
+        '-minute',
         'player',
         'is_home_score',
         'is_away_score',
-        'is_penalty',
     ]
 
     def filter_queryset(self, qs):
@@ -454,21 +458,22 @@ class MatchDetailListJson(ListJson):
         # prepare list with output column data
         # queryset is already paginated here
         json_data = []
+        i = 1
         for item in qs:
             action = '<a class="table-action-btn" title="Chỉnh sửa" href="' + reverse('core:match_detail_edit', kwargs={'item_id': item.id}) + '"><i class="fa fa-pencil text-success"></i></a> <a class="table-action-btn" id="btn-delete-'+str(item.id)+'" title="Remove" data-url="' + reverse('core:match_detail_delete', kwargs={'item_id': item.id}) + '"><i class="fa fa-remove text-danger"></i></a>'
 
             json_data.append({
+                "stt": str(i),
                 "match": str(item.match),
                 "match_action": item.action.name if item.action else '',
                 "player": item.player.name if item.player else '',
                 "is_score": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.is_home_score is True or item.is_away_score is True else '<i class="ion ion-close-circled text-danger"></i>',
-                "is_penalty": '<i class="ion ion-checkmark-circled text-success"></i>'
-                if item.is_penalty is True else '<i class="ion ion-close-circled text-danger"></i>',
                 "minute": str(item.minute) + "'",
                 "in_match_part": MATCH_PARTS[item.in_match_part],
                 "action": mark_safe(action)
             })
+            i += 1
         return json_data
 
 
@@ -541,8 +546,9 @@ class PostListJson(ListJson):
                 "tags": ', '.join(x.name for x in item.tags.all()),
                 "status": '<i class="ion ion-checkmark-circled text-success"></i>'
                 if item.status is True else '<i class="ion ion-close-circled text-danger"></i>',
-                "display_place": DISPLAY_CHOICES[item.display_place],
+                "display_place": DISPLAY_CHOICES[item.display_place] if item.display_place else '',
                 "updated_at": display_time(item.updated_at),
+                "display_time": display_time(item.display_time),
                 "action": mark_safe(action)
             })
         return json_data

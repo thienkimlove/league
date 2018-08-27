@@ -99,14 +99,13 @@
                     <table id="dataTables" class="table table-striped table-bordered table-actions-bar">
                         <thead>
                             <tr>
-                                <th>Match</th>
-                                <th>Match Action</th>
-                                <th>IsScore</th>
-                                <th>IsPenalty</th>
-                                <th>Player</th>
+                                <th>ORDER</th>
+                                <th>Part</th>
                                 <th>Minute</th>
-                                <th>Match Part</th>
                                 <th>Action</th>
+                                <th>Player</th>
+                                <th>Goal</th>
+                                <th>EDIT</th>
                             </tr>
                         </thead>
                     </table>
@@ -161,13 +160,12 @@
                     }
                 },
                 columns: [
-                    {data: 'match', name: 'match', orderable: true},
-                    {data: 'match_action', name: 'match_action', orderable: false},
-                    {data: 'is_score', name: 'is_score', orderable: false},
-                    {data: 'is_penalty', name: 'is_penalty', orderable: false},
-                    {data: 'player', name: 'player', orderable: false},
+                    {data: 'stt', name: 'stt', orderable: true},
+                    {data: 'in_match_part', name: 'in_match_part', orderable: true},
                     {data: 'minute', name: 'minute', orderable: false},
-                    {data: 'in_match_part', name: 'in_match_part', orderable: false},
+                    {data: 'match_action', name: 'match_action', orderable: false},
+                    {data: 'player', name: 'player', orderable: false},
+                    {data: 'is_score', name: 'is_score', orderable: false},
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[1, 'desc']]

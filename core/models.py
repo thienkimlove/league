@@ -38,17 +38,17 @@ def site_slug(data):
         ord(u'ý'): 'y', ord(u'ỳ'): 'y', ord(u'ỷ'): 'y', ord(u'ỹ'): 'y', ord(u'ỵ'): 'y',
     }
     data = (data[:200]) if len(data) > 200 else data
-    slug = slugify(data.translate(vietnamese_map))
-    return slug
+    return slugify(data.translate(vietnamese_map), allow_unicode=True)
 
 
-class GeneralSlug(GeneralCharField):
+class GeneralSlug(models.SlugField):
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 191
         kwargs['blank'] = True
         kwargs['null'] = True
         kwargs['editable'] = False
         kwargs['db_index'] = True
+        kwargs['allow_unicode'] = True
         super().__init__(*args, **kwargs)
 
 
@@ -89,8 +89,7 @@ class TimeStampedModel(models.Model):
 
     def save(self, *args, **kwargs):
         if hasattr(self, 'slug'):
-            if not self.slug:
-                self.slug = self._get_unique_slug()
+            self.slug = self._get_unique_slug()
         super().save()
 
     def __str__(self):
@@ -156,6 +155,7 @@ class League(TimeStampedModel):
 
 class Club(TimeStampedModel):
     name = GeneralCharField(null=True, default=None)
+    short_name = GeneralCharField(null=True, default=None, blank=True)
     website = GeneralCharField(null=True, default=None, blank=True)
     slug = GeneralSlug()
     image = models.ImageField(null=True, default=None, blank=True)
@@ -256,7 +256,7 @@ class Match(TimeStampedModel):
     home_end_score = models.SmallIntegerField(default=0)
     away_end_score = models.SmallIntegerField(default=0)
     status = models.BooleanField(default=True)
-    is_end = models.BooleanField(default=False)
+    is_end = models.BooleanField(default=False, verbose_name='Finish', name='is_end')
     man_of_match = models.ForeignKey(Player, on_delete=models.CASCADE, blank=True, null=True)
     man_of_match_score = models.FloatField(default=0.0, blank=True, null=True)
     attend_number = models.IntegerField(default=0, blank=True, null=True)
@@ -294,7 +294,6 @@ class MatchDetail(TimeStampedModel):
     action = models.ForeignKey(MatchAction, on_delete=models.CASCADE, blank=True, null=True)
     is_home_score = models.BooleanField(default=False)
     is_away_score = models.BooleanField(default=False)
-    is_penalty = models.BooleanField(default=False)
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True, default=None, blank=True)
     minute = models.SmallIntegerField(null=True, blank=True)
     more_detail = models.CharField(max_length=255, blank=True, null=True)
@@ -325,7 +324,8 @@ class Post(TimeStampedModel):
     views = models.IntegerField(default=0, editable=False)
     display_place = GeneralCharField(choices=DISPLAY_CHOICES, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None, null=True)
-    clubs = models.ManyToManyField(Club)
+    display_time = models.DateTimeField(null=True)
+    clubs = models.ManyToManyField(Club, blank=True)
 
     class Meta:
         verbose_name = _('Post')
@@ -363,7 +363,7 @@ class Gallery(TimeStampedModel):
     content = models.TextField(blank=True, null=True)
     status = models.BooleanField(default=True)
     image = models.ImageField(blank=True, null=True)
-    clubs = models.ManyToManyField(Club)
+    clubs = models.ManyToManyField(Club, blank=True)
 
     class Meta:
         verbose_name = _('Gallery')
@@ -402,7 +402,7 @@ class Social(TimeStampedModel):
     image = models.ImageField(blank=True, null=True)
     social_type = GeneralCharField(choices=SOCIAL_CHOICES, blank=True, null=True)
     social_link = GeneralCharField(blank=True, null=True)
-    clubs = models.ManyToManyField(Club)
+    clubs = models.ManyToManyField(Club, blank=True)
 
     class Meta:
         verbose_name = _('Social')

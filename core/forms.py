@@ -155,7 +155,7 @@ class LeagueForm(ModelForm):
 class ClubForm(ModelForm):
     class Meta:
         model = Club
-        fields = ('name', 'stadium', 'status', 'image', 'background_img', 'website')
+        fields = '__all__'
 
 
 class MatchActionForm(ModelForm):

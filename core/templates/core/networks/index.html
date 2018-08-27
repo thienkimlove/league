@@ -30,10 +30,7 @@
 {% block content %}
     <div class="row">
         <div class="col-sm-12">
-            <div class="btn-group pull-right m-t-15">
-                <a href="{% url 'core:post_create' %}"><button type="button" class="btn btn-default dropdown-toggle waves-effect" >Tạo mới <span class="m-l-5"><i class="fa fa-plus"></i></span></button></a>
-            </div>
-            <h4 class="page-title">Posts</h4>
+            <h4 class="page-title">Danh sách Network</h4>
         </div>
     </div>
 
@@ -46,35 +43,15 @@
                             {% csrf_token %}
 
                             <div class="form-group m-l-10">
-                                <label class="sr-only" for="">Search By Name</label>
-                                <input type="text" class="form-control" placeholder="Tên" name="name"/>
+                                <label class="sr-only" for="">Network Name</label>
+                                <input type="text" class="form-control" placeholder="Tên Network" name="name"/>
                             </div>
 
-                            {% get_categories as categories %}
-                            <div class="form-group m-l-10">
-                                <label class="sr-only" for="">Categories</label>
-                                <select name="category" class="form-control select2">
-                                    <option value="">Choose Category</option>
-                                    {% for category in categories %}
-                                        <option value="{{ category.id }}">{{ category.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
 
-                            {% get_clubs as clubs %}
-                            <div class="form-group m-l-10">
-                                <label class="sr-only" for="">Clubs</label>
-                                <select name="club" class="form-control select2">
-                                    <option value="">Choose Club</option>
-                                    {% for club in clubs %}
-                                        <option value="{{ club.id }}">{{ club.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
 
                             <div class="form-group m-l-10">
-                                <label class="sr-only" for="">Status</label>
-                                <select name="status" class="form-control select2">
+                                <label class="sr-only" for="">Active</label>
+                                <select name="active" class="form-control select2">
                                     <option value="1">Active</option>
                                     <option value="0">Inactive</option>
                                 </select>
@@ -95,14 +72,11 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Category</th>
-                                <th>Clubs</th>
-                                <th>Tags</th>
-                                <th>Image</th>
-                                <th>Display</th>
+                                <th>Cron URL</th>
+                                <th>Offer Count</th>
                                 <th>Status</th>
-                                <th>DisplayTime</th>
                                 <th>Update At</th>
+                                <th>Last Cron At</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -150,24 +124,19 @@
                 serverSide: true,
                 processing: true,
                 ajax: {
-                    url: '{% url 'core:post_data_table' %}',
+                    url: '{% url 'core:network_data_table' %}',
                     data: function (d) {
                         d.name = $('input[name=name]').val();
-                        d.status = $('select[name=status]').val();
-                        d.category = $('select[name=category]').val();
-                        d.club = $('select[name=club]').val();
+                        d.active = $('select[name=active]').val();
                     }
                 },
                 columns: [
                     {data: 'name', name: 'name', orderable: true},
-                    {data: 'category', name: 'category', orderable: true},
-                    {data: 'clubs', name: 'clubs', orderable: true},
-                    {data: 'tags', name: 'tags', orderable: true},
-                    {data: 'image', name: 'image', orderable: true},
-                    {data: 'display_place', name: 'display_place', orderable: true},
-                    {data: 'status', name: 'status', orderable: false},
-                    {data: 'display_time', name: 'display_time', orderable: false},
+                    {data: 'cron_url', name: 'cron_url', orderable: true},
+                    {data: 'count_offer', name: 'count_offer', orderable: false},
+                    {data: 'active', name: 'active', orderable: false},
                     {data: 'updated_at', name: 'updated_at', orderable: false},
+                    {data: 'last_cron_at', name: 'last_cron_at', orderable: false},
                     {data: 'action', name: 'action', orderable: false},
                 ],
                 order: [[1, 'desc']]
@@ -176,28 +145,6 @@
             $('#search-form input,select').on('change', function(e) {
                 e.preventDefault();
                 dataTable.draw();
-            });
-
-            dataTable.on('click', '[id^="btn-delete-"]', function (e) {
-                e.preventDefault();
-
-                let url = $(this).data('url');
-
-                swal({
-                    title: "Bạn có muốn xóa?",
-                    text: "",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Accept!"
-                }).then(function () {
-                    $.ajax({
-                        url : url,
-                        type : 'GET',
-                    }).always(function (data) {
-                        dataTable.draw();
-                    });
-                });
             });
         });
     </script>
