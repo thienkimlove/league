@@ -75,6 +75,7 @@
 <script src="{% static "core/ubold/assets/js/jquery.app.js" %}"></script>
 <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
 <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+<script type="text/javascript" src="{% static "filebrowser/js/FB_CKEditor.js" %}"></script>
 <script type="text/javascript">
    $(function () {
        $.ajaxSetup({
@@ -83,5 +84,20 @@
    })
 </script>
 {% block inline_scripts %}{% endblock %}
+<script>
+
+    if (CKEDITOR) {
+        CKEDITOR.config.filebrowserBrowseUrl = '/admin/filebrowser/browse/?pop=3';
+        CKEDITOR.config.filebrowserImageBrowseUrl = '/admin/filebrowser/browse/?pop=3';
+        CKEDITOR.config.filebrowserFlashBrowseUrl = '/admin/filebrowser/browse/?pop=3';
+        CKEDITOR.config.filebrowserUploadUrl = '/admin/filebrowser/browse/?pop=3';
+        CKEDITOR.config.filebrowserImageUploadUrl = '/admin/filebrowser/browse/?pop=3';
+        CKEDITOR.config.filebrowserFlashUploadUrl = '/admin/filebrowser/browse/?pop=3';
+        //do not add extra paragraph to html
+        CKEDITOR.config.autoParagraph = false;
+    }
+
+
+</script>
 </body>
 </html>

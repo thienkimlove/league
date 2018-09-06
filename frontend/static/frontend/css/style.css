@@ -38,8 +38,8 @@ body{
 	overflow-x: hidden;
 }
 body p{margin: 0;}
-body h1{font-size: 72px; font-weight: 800; margin-top: 0; color: #f9f9f9; text-transform: uppercase;}
-body h2{font-size: 52px; color: #212121; font-weight: 900;}
+body h1 {font-size: 32px; font-weight: 800; margin-top: 0; color: #f9f9f9; text-transform: uppercase;}
+body h2 {font-size: 22px; color: #212121; font-weight: 900;}
 
 .no-margin {margin: 0 !important;}
 .no-padding {padding: 0!important;}
@@ -940,6 +940,10 @@ button.load-more { margin:20px auto 40px; background: #124dab; padding:10px 40px
 	.block-matchweek.style2 .carousel-item { width: 100% }
 	.block-media-gallery .block-carousel .carousel-item{ width: 100%; }
 	.block-news1 .block-carousel .carousel-item { width: 100%;}
+
+	.container .col-md-9.col-sm-12.col-xs-12 h2 { font-size: 20px; }
+	.container .col-md-9.col-sm-12.col-xs-12 p > img { width: 100%!important; }
+	.filter th { font-size: 0.85em; }
 }
 
 

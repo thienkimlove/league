@@ -36,7 +36,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 # Application definition
 
 INSTALLED_APPS = [
-    'admin_menu',
+    #'admin_menu',
     'dal',
     'dal_select2',
     'filebrowser',
@@ -213,9 +213,10 @@ CONSTANCE_CONFIG_FIELDSETS = {
 # relative path to MEDIA
 CKEDITOR_UPLOAD_PATH = "uploads/"
 # All uploaded files are slugified by default. To disable this feature
+# CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_UPLOAD_SLUGIFY_FILENAME = False
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-# CKEDITOR_BROWSE_SHOW_DIRS=True
+CKEDITOR_BROWSE_SHOW_DIRS=True
 # CKEDITOR_RESTRICT_BY_DATE=True
 CKEDITOR_CONFIGS = {
     'default': {
@@ -283,6 +284,9 @@ CKEDITOR_CONFIGS = {
             'dialogui',
             'elementspath',
             'resize',
+            #'image2',
+            # 'filebrowser',
+            #'imageuploader',
         ]),
     }
 }
