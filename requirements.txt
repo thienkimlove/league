@@ -14,7 +14,7 @@ django-colorfield==0.1.14
 django-constance==2.2.0
 django-countries==5.2
 django-datatables-view==1.16.0
-django-debug-toolbar==1.9.1
+django-debug-toolbar==1.11.1
 django-djconfig==0.6.0
 django-etc==0.10.0
 django-extensions==2.0.6
